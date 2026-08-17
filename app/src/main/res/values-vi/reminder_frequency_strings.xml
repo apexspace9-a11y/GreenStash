@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reminder_frequency_daily">Hằng ngày</string>
+    <string name="reminder_frequency_semiweekly">Vài lần mỗi tuần</string>
+    <string name="reminder_frequency_weekly">Hằng tuần</string>
+    <string name="reminder_notification_title">Nhắc %1$s cho mục tiêu %2$s</string>
+</resources>
