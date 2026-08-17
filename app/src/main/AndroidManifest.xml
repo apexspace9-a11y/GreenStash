@@ -28,7 +28,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="mocquy_lc_shortcut" />
+                <data android:scheme="greenstash_lc_shortcut" />
             </intent-filter>
         </activity>
 
@@ -41,34 +41,24 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".widget.GoalWidget"
-            android:exported="true">
+        <receiver android:name=".widget.GoalWidget" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/goal_widget_info" />
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/goal_widget_info" />
         </receiver>
 
         <receiver android:name=".reminder.receivers.AlarmReceiver" android:enabled="true" android:exported="false" />
         <receiver android:name=".reminder.receivers.ReminderDepositReceiver" android:enabled="true" android:exported="false" />
         <receiver android:name=".reminder.receivers.ReminderDismissReceiver" android:enabled="true" android:exported="false" />
 
-        <receiver
-            android:name=".reminder.receivers.BootReceiver"
-            android:enabled="true"
-            android:exported="false">
+        <receiver android:name=".reminder.receivers.BootReceiver" android:enabled="true" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".reminder.receivers.DateTimeChangeReceiver"
-            android:enabled="true"
-            android:exported="false">
+        <receiver android:name=".reminder.receivers.DateTimeChangeReceiver" android:enabled="true" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
                 <action android:name="android.intent.action.TIME_SET" />
@@ -81,9 +71,7 @@
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths" />
         </provider>
 
         <provider
