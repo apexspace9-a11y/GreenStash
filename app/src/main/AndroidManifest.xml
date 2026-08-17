@@ -11,7 +11,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="@string/brand_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.GreenStash.Splash"
         tools:targetApi="31">
@@ -22,14 +22,13 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="greenstash_lc_shortcut" />
+                <data android:scheme="mocquy_lc_shortcut" />
             </intent-filter>
         </activity>
 
@@ -53,20 +52,9 @@
                 android:resource="@xml/goal_widget_info" />
         </receiver>
 
-        <receiver
-            android:name=".reminder.receivers.AlarmReceiver"
-            android:enabled="true"
-            android:exported="false" />
-
-        <receiver
-            android:name=".reminder.receivers.ReminderDepositReceiver"
-            android:enabled="true"
-            android:exported="false" />
-
-        <receiver
-            android:name=".reminder.receivers.ReminderDismissReceiver"
-            android:enabled="true"
-            android:exported="false" />
+        <receiver android:name=".reminder.receivers.AlarmReceiver" android:enabled="true" android:exported="false" />
+        <receiver android:name=".reminder.receivers.ReminderDepositReceiver" android:enabled="true" android:exported="false" />
+        <receiver android:name=".reminder.receivers.ReminderDismissReceiver" android:enabled="true" android:exported="false" />
 
         <receiver
             android:name=".reminder.receivers.BootReceiver"
@@ -103,13 +91,10 @@
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
             tools:node="merge">
-            <!-- Remove the default initializer for on-demand initialization of WorkManager -->
             <meta-data
                 android:name="androidx.work.WorkManagerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
-
     </application>
-
 </manifest>
