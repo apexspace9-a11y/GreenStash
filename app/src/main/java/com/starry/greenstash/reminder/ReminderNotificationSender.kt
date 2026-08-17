@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package com.starry.greenstash.reminder
 
 import android.app.NotificationManager
@@ -41,49 +40,37 @@ import com.starry.greenstash.utils.GoalTextUtils
 import com.starry.greenstash.utils.NumberUtils
 import com.starry.greenstash.utils.PreferenceUtil
 
-
-/**
- * Handles the sending of notifications for goal reminders.
- * @param context The context of the application.
- * @param preferenceUtil The preference utility to access the user preferences.
- */
 class ReminderNotificationSender(
     private val context: Context,
     private val preferenceUtil: PreferenceUtil
 ) {
     companion object {
         const val REMINDER_CHANNEL_ID = "reminder_notification_channel"
-        const val REMINDER_CHANNEL_NAME = "Goal Reminders"
+        const val REMINDER_CHANNEL_NAME = "Mộc Quỹ"
         private const val INTENT_UNIQUE_CODE = 7546
     }
 
     private val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    /**
-     * Sends a notification to the user for the goal reminder.
-     * The notification contains the title of the goal, a description, and two actions:
-     * 1. Deposit: To deposit the calculated amount for the goal.
-     * 2. Dismiss: To dismiss the notification.
-     * @param goalItem The goal with transactions for which the notification is to be sent.
-     */
     fun sendNotification(goalItem: GoalWithTransactions) {
         val goal = goalItem.goal
-
-        val titlePrefix = when (goal.priority) {
-            GoalPriority.High -> "Daily"
-            GoalPriority.Normal -> "SemiWeekly"
-            GoalPriority.Low -> "Weekly"
-        }
+        val frequency = context.getString(
+            when (goal.priority) {
+                GoalPriority.High -> R.string.reminder_frequency_daily
+                GoalPriority.Normal -> R.string.reminder_frequency_semiweekly
+                GoalPriority.Low -> R.string.reminder_frequency_weekly
+            }
+        )
 
         val notification = NotificationCompat.Builder(context, REMINDER_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_reminder_notification)
-            .setContentTitle("$titlePrefix reminder for ${goal.title}")
+            .setContentTitle(context.getString(R.string.reminder_notification_title, frequency, goal.title))
             .setContentText(context.getString(R.string.reminder_notification_desc))
             .setStyle(NotificationCompat.BigTextStyle())
             .setContentIntent(createActivityIntent())
 
-        val remainingAmount = (goal.targetAmount - goalItem.getCurrentlySavedAmount())
+        val remainingAmount = goal.targetAmount - goalItem.getCurrentlySavedAmount()
         val defCurrency = preferenceUtil.getString(PreferenceUtil.DEFAULT_CURRENCY_STR, "")!!
         val dateStyle = DateStyle.entries[preferenceUtil.getInt(
             PreferenceUtil.DATE_STYLE_INT,
@@ -97,40 +84,23 @@ class ReminderNotificationSender(
                     val amountDay = remainingAmount / calculatedDays.remainingDays
                     notification.addAction(
                         R.drawable.ic_notification_deposit,
-                        "${context.getString(R.string.deposit_button)} ${
-                            NumberUtils.formatCurrency(
-                                amount = NumberUtils.roundDecimal(amountDay),
-                                currencyCode = defCurrency
-                            )
-                        }",
+                        "${context.getString(R.string.deposit_button)} ${NumberUtils.formatCurrency(NumberUtils.roundDecimal(amountDay), defCurrency)}",
                         createDepositIntent(goal.goalId, amountDay)
                     )
                 }
-
                 GoalPriority.Normal -> {
                     val amountSemiWeek = remainingAmount / (calculatedDays.remainingDays / 4)
                     notification.addAction(
                         R.drawable.ic_notification_deposit,
-                        "${context.getString(R.string.deposit_button)} ${
-                            NumberUtils.formatCurrency(
-                                amount = NumberUtils.roundDecimal(amountSemiWeek),
-                                currencyCode = defCurrency
-                            )
-                        }",
+                        "${context.getString(R.string.deposit_button)} ${NumberUtils.formatCurrency(NumberUtils.roundDecimal(amountSemiWeek), defCurrency)}",
                         createDepositIntent(goal.goalId, amountSemiWeek)
                     )
                 }
-
                 GoalPriority.Low -> {
                     val amountWeek = remainingAmount / (calculatedDays.remainingDays / 7)
                     notification.addAction(
                         R.drawable.ic_notification_deposit,
-                        "${context.getString(R.string.deposit_button)} ${
-                            NumberUtils.formatCurrency(
-                                amount = NumberUtils.roundDecimal(amountWeek),
-                                currencyCode = defCurrency
-                            )
-                        }",
+                        "${context.getString(R.string.deposit_button)} ${NumberUtils.formatCurrency(NumberUtils.roundDecimal(amountWeek), defCurrency)}",
                         createDepositIntent(goal.goalId, amountWeek)
                     )
                 }
@@ -145,24 +115,15 @@ class ReminderNotificationSender(
         notificationManager.notify(goal.goalId.toInt(), notification.build())
     }
 
-    /**
-     * Updates the notification with the deposited message.
-     * @param goalId The goal id for which the notification is to be updated.
-     * @param amount The amount deposited.
-     */
     fun updateWithDepositNotification(goalId: Long, amount: Double) {
         val defCurrency = preferenceUtil.getString(PreferenceUtil.DEFAULT_CURRENCY_STR, "")
         val notification = NotificationCompat.Builder(context, REMINDER_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_reminder_notification)
             .setContentTitle(context.getString(R.string.notification_deposited_title))
             .setContentText(
-                context.getString(R.string.notification_deposited_desc)
-                    .format(
-                        NumberUtils.formatCurrency(
-                            NumberUtils.roundDecimal(amount),
-                            defCurrency!!
-                        )
-                    )
+                context.getString(R.string.notification_deposited_desc).format(
+                    NumberUtils.formatCurrency(NumberUtils.roundDecimal(amount), defCurrency!!)
+                )
             )
             .setStyle(NotificationCompat.BigTextStyle())
             .setContentIntent(createActivityIntent())
@@ -174,13 +135,8 @@ class ReminderNotificationSender(
         notificationManager.notify(goalId.toInt(), notification.build())
     }
 
-    /**
-     * Dismisses the notification for the goal.
-     * @param goalId The goal id for which the notification is to be dismissed.
-     */
     fun dismissNotification(goalId: Long) = notificationManager.cancel(goalId.toInt())
 
-    // Creates a pending intent for the deposit action.
     private fun createDepositIntent(goalId: Long, amount: Double) =
         Intent(context, ReminderDepositReceiver::class.java).apply {
             putExtra(ReminderDepositReceiver.REMINDER_GOAL_ID, goalId)
@@ -192,7 +148,6 @@ class ReminderNotificationSender(
             )
         }
 
-    // Creates a pending intent for the dismiss action.
     private fun createDismissIntent(goalId: Long) =
         Intent(context, ReminderDismissReceiver::class.java).apply {
             putExtra(ReminderDismissReceiver.REMINDER_GOAL_ID, goalId)
@@ -203,7 +158,6 @@ class ReminderNotificationSender(
             )
         }
 
-    // Creates a pending intent to open the main activity when the notification is clicked.
     private fun createActivityIntent() = Intent(context, MainActivity::class.java).let { intent ->
         PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     }

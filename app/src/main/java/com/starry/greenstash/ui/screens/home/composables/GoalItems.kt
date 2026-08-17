@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package com.starry.greenstash.ui.screens.home.composables
 
 import android.graphics.Bitmap
@@ -54,7 +53,6 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberSwipeToDismissBoxState
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -81,11 +79,11 @@ import coil.request.ImageRequest
 import com.starry.greenstash.R
 import com.starry.greenstash.ui.theme.greenstashFont
 import com.starry.greenstash.ui.theme.greenstashNumberFont
+import com.starry.greenstash.ui.theme.liquidGlass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
 
 @Composable
 fun GoalItemClassic(
@@ -103,18 +101,16 @@ fun GoalItemClassic(
     onArchivedClicked: () -> Unit
 ) {
     val progress by animateFloatAsState(targetValue = goalProgress, label = "goal progress")
+    val shape = RoundedCornerShape(24.dp)
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                5.dp
-            )
-        ),
-        shape = RoundedCornerShape(6.dp)
+            .padding(12.dp)
+            .liquidGlass(radius = 24.dp, blurAmount = 18.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        shape = shape
     ) {
         Column {
             AsyncImage(
@@ -135,7 +131,6 @@ fun GoalItemClassic(
                     .clip(RoundedCornerShape(40.dp)),
             )
 
-            /** Title, Primary & Secondary text */
             Column(modifier = Modifier.padding(10.dp)) {
                 Text(
                     text = title,
@@ -162,11 +157,10 @@ fun GoalItemClassic(
                     lineHeight = 1.3f.em,
                     fontSize = 14.sp,
                     fontFamily = greenstashFont,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
-            /** Goal Buttons */
             Row(modifier = Modifier.padding(3.dp)) {
                 if (isGoalCompleted) {
                     TextButton(
@@ -193,9 +187,7 @@ fun GoalItemClassic(
                         )
                     }
                 }
-                TextButton(
-                    onClick = { onWithdrawClicked() },
-                ) {
+                TextButton(onClick = { onWithdrawClicked() }) {
                     Text(
                         text = stringResource(id = R.string.withdraw_button).uppercase(),
                         fontWeight = FontWeight.SemiBold,
@@ -204,10 +196,7 @@ fun GoalItemClassic(
                     )
                 }
 
-                Spacer(
-                    modifier = Modifier
-                        .weight(1f)
-                )
+                Spacer(modifier = Modifier.weight(1f))
 
                 IconButton(onClick = onInfoClicked) {
                     Icon(
@@ -238,7 +227,6 @@ fun GoalItemClassic(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalItemCompact(
@@ -261,27 +249,25 @@ fun GoalItemCompact(
             when (direction) {
                 SwipeToDismissBoxValue.EndToStart -> {
                     coroutineScope.launch {
-                        delay(180) // allow the swipe to settle.
+                        delay(180)
                         withContext(Dispatchers.Main) { onEditClicked() }
                     }
                 }
-
                 SwipeToDismissBoxValue.StartToEnd -> {
                     coroutineScope.launch {
-                        delay(180) // allow the swipe to settle.
+                        delay(180)
                         withContext(Dispatchers.Main) { onDeleteClicked() }
                     }
                 }
-
                 SwipeToDismissBoxValue.Settled -> {}
             }
-            false // Don't allow it to settle on dismissed state.
+            false
         }
     )
 
     val context = LocalContext.current
     val dismissDirection = swipeState.dismissDirection
-    val shape = RoundedCornerShape(18.dp)
+    val shape = RoundedCornerShape(20.dp)
     val progress by animateFloatAsState(targetValue = goalProgress, label = "progress")
 
     SwipeToDismissBox(
@@ -308,7 +294,6 @@ fun GoalItemCompact(
                     when (dismissDirection) {
                         SwipeToDismissBoxValue.EndToStart -> R.drawable.ic_goal_edit
                         SwipeToDismissBoxValue.StartToEnd -> R.drawable.ic_goal_delete
-                        // Placeholder icon, not used anywhere.
                         SwipeToDismissBoxValue.Settled -> R.drawable.ic_goal_info
                     }
                 }
@@ -318,7 +303,6 @@ fun GoalItemCompact(
                     when (dismissDirection) {
                         SwipeToDismissBoxValue.EndToStart -> context.getString(R.string.edit_button_description)
                         SwipeToDismissBoxValue.StartToEnd -> context.getString(R.string.delete_button_description)
-                        // Placeholder string, not used anywhere.
                         SwipeToDismissBoxValue.Settled -> context.getString(R.string.info_button_description)
                     }
                 }
@@ -351,22 +335,20 @@ fun GoalItemCompact(
         content = {
             Card(
                 onClick = onInfoClicked,
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .liquidGlass(radius = 20.dp, blurAmount = 16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.Transparent),
                 shape = shape
             ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
+                Box(modifier = Modifier.fillMaxWidth()) {
                     Row {
                         Spacer(modifier = Modifier.weight(1f))
                         Icon(
                             imageVector = goalIcon,
                             contentDescription = null,
                             modifier = Modifier.size(200.dp),
-                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
                         )
                     }
 
@@ -392,7 +374,7 @@ fun GoalItemCompact(
                                         .padding(start = 6.dp),
                                     imageVector = goalIcon,
                                     contentDescription = title,
-                                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                    tint = MaterialTheme.colorScheme.onSurface
                                 )
                             }
 
@@ -402,14 +384,14 @@ fun GoalItemCompact(
                                         onClick = { onArchivedClicked() },
                                         modifier = Modifier
                                             .padding(top = 4.dp)
-                                            .offset((10).dp)
+                                            .offset(10.dp)
                                             .size(54.dp)
                                     ) {
                                         Icon(
                                             modifier = Modifier.size(20.dp),
                                             imageVector = ImageVector.vectorResource(id = R.drawable.ic_compact_goal_archve),
                                             contentDescription = stringResource(id = R.string.archive_button),
-                                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                            tint = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
                                 } else {
@@ -417,19 +399,20 @@ fun GoalItemCompact(
                                         onClick = { onDepositClicked() },
                                         modifier = Modifier
                                             .padding(top = 4.dp)
-                                            .offset((10).dp)
+                                            .offset(10.dp)
                                             .size(54.dp)
                                     ) {
                                         Icon(
                                             modifier = Modifier.size(20.dp),
                                             imageVector = ImageVector.vectorResource(id = R.drawable.ic_compact_goal_deposit),
                                             contentDescription = stringResource(id = R.string.deposit_button),
-                                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                            tint = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
                                 }
                                 IconButton(
-                                    onClick = { onWithdrawClicked() }, modifier = Modifier
+                                    onClick = { onWithdrawClicked() },
+                                    modifier = Modifier
                                         .padding(top = 4.dp)
                                         .offset((-2).dp)
                                         .size(54.dp)
@@ -438,12 +421,12 @@ fun GoalItemCompact(
                                         modifier = Modifier.size(20.dp),
                                         imageVector = ImageVector.vectorResource(R.drawable.ic_compact_goal_withdraw),
                                         contentDescription = stringResource(id = R.string.withdraw_button),
-                                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                        tint = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             }
-
                         }
+
                         Text(
                             text = title,
                             modifier = Modifier.padding(start = 4.dp, top = 10.dp),
@@ -452,7 +435,7 @@ fun GoalItemCompact(
                             fontSize = 18.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.onSecondaryContainer
+                            color = MaterialTheme.colorScheme.onSurface
                         )
 
                         if (savedAmount.length > 10) {
@@ -464,7 +447,7 @@ fun GoalItemCompact(
                                 fontWeight = FontWeight.Bold,
                                 maxLines = 3,
                                 overflow = TextOverflow.Ellipsis,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                                color = MaterialTheme.colorScheme.onSurface
                             )
 
                             Row(Modifier.fillMaxWidth()) {
@@ -474,7 +457,7 @@ fun GoalItemCompact(
                                     fontSize = 16.sp,
                                     fontFamily = greenstashFont,
                                     fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         } else {
@@ -489,7 +472,7 @@ fun GoalItemCompact(
                                     fontFamily = greenstashNumberFont,
                                     fontWeight = FontWeight.Bold,
                                     maxLines = 1,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
 
                                 Text(
@@ -498,7 +481,7 @@ fun GoalItemCompact(
                                     fontSize = 16.sp,
                                     fontFamily = greenstashFont,
                                     fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
