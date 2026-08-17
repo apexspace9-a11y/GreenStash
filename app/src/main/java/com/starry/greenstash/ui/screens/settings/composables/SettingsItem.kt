@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package com.starry.greenstash.ui.screens.settings.composables
 
 import androidx.compose.foundation.clickable
@@ -55,6 +54,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.starry.greenstash.R
 import com.starry.greenstash.ui.theme.greenstashFont
+import com.starry.greenstash.ui.theme.liquidGlass
 import com.starry.greenstash.utils.weakHapticFeedback
 
 @Composable
@@ -62,8 +62,10 @@ fun SettingsItem(title: String, description: String?, icon: ImageVector, onClick
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 5.dp)
+            .liquidGlass(radius = 22.dp, blurAmount = 16.dp)
             .clickable { onClick() }
-            .padding(horizontal = 8.dp, vertical = 16.dp),
+            .padding(horizontal = 8.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -97,7 +99,6 @@ fun SettingsItem(title: String, description: String?, icon: ImageVector, onClick
             }
         }
     }
-
 }
 
 @Composable
@@ -112,6 +113,9 @@ fun SettingsItem(
     val context = LocalContext.current
     Row(
         modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 5.dp)
+            .liquidGlass(radius = 22.dp, blurAmount = 16.dp)
             .clearAndSetSemantics {
                 role = Role.Switch
                 contentDescription = "$title, $description"
@@ -129,8 +133,7 @@ fun SettingsItem(
                     true
                 }
             }
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 16.dp),
+            .padding(horizontal = 8.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
