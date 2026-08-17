@@ -1,0 +1,66 @@
+name: iOS CI
+
+on:
+  push:
+    branches: [ "main", "vunquy-redesign" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate --spec ios/project.yml --project ios
+
+      - name: Build iOS Simulator app
+        run: |
+          xcodebuild \
+            -project ios/VunQuy.xcodeproj \
+            -scheme VunQuy \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath ios/build-simulator \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+          ditto -c -k --sequesterRsrc --keepParent \
+            ios/build-simulator/Build/Products/Release-iphonesimulator/VunQuy.app \
+            ios/VunQuy-iOS-Simulator.zip
+
+      - name: Build unsigned iPhone IPA
+        run: |
+          xcodebuild \
+            -project ios/VunQuy.xcodeproj \
+            -scheme VunQuy \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath ios/build-device \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY='' \
+            build
+          rm -rf ios/Payload
+          mkdir -p ios/Payload
+          cp -R ios/build-device/Build/Products/Release-iphoneos/VunQuy.app ios/Payload/
+          cd ios && zip -qry VunQuy-v5.0.0-unsigned.ipa Payload
+
+      - name: Upload iOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: VunQuy-iOS
+          path: |
+            ios/VunQuy-iOS-Simulator.zip
+            ios/VunQuy-v5.0.0-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 14
