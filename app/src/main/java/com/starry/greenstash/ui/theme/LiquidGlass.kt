@@ -91,6 +91,9 @@ fun Modifier.liquidGlass(
     val shape = RoundedCornerShape(radius)
     val dark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val hazeState = LocalMocQuyHazeState.current
+    val reflectedLightColor = MaterialTheme.colorScheme.primary.copy(
+        alpha = if (dark) 0.10f else 0.08f
+    )
 
     val tint = if (dark) {
         Color(0xFF10231F).copy(alpha = 0.34f)
@@ -154,7 +157,7 @@ fun Modifier.liquidGlass(
             )
             val lowerReflectedLight = Brush.radialGradient(
                 colors = listOf(
-                    MaterialTheme.colorScheme.primary.copy(alpha = if (dark) 0.10f else 0.08f),
+                    reflectedLightColor,
                     Color.Transparent
                 ),
                 center = Offset(size.width * 0.78f, size.height * 1.06f),
