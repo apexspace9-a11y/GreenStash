@@ -2,7 +2,7 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main", "mocquy-vietnam-liquid-glass" ]
+    branches: [ "main", "mocquy-*" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
