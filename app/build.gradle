@@ -37,6 +37,11 @@ android {
                 }
             }
         }
+        sideload {
+            initWith release
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ['release']
+        }
     }
 
     compileOptions {
