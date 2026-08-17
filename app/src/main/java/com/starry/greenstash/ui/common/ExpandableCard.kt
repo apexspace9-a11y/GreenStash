@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package com.starry.greenstash.ui.common
 
 import android.content.ClipData
@@ -51,9 +50,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +60,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
@@ -77,6 +75,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.starry.greenstash.R
 import com.starry.greenstash.ui.theme.greenstashFont
+import com.starry.greenstash.ui.theme.liquidGlass
 import com.starry.greenstash.utils.Utils
 import com.starry.greenstash.utils.toToast
 import kotlinx.coroutines.launch
@@ -88,45 +87,39 @@ fun ExpandableCard(
     titleFontSize: TextUnit = 16.sp,
     titleFontWeight: FontWeight = FontWeight.Bold,
     titleFontFamily: FontFamily = greenstashFont,
-    shape: Shape = RoundedCornerShape(8.dp),
+    shape: Shape = RoundedCornerShape(20.dp),
     padding: Dp = 12.dp,
     expanded: Boolean = false,
     content: @Composable () -> Unit
 ) {
     var expandedState by remember { mutableStateOf(expanded) }
     val rotationState by animateFloatAsState(
-        targetValue = if (expandedState) 180f else 0f, label = "expandable card rotation state"
+        targetValue = if (expandedState) 180f else 0f,
+        label = "expandable card rotation state"
     )
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(start = 12.dp, end = 12.dp, top = 4.dp)
+            .padding(start = 12.dp, end = 12.dp, top = 6.dp)
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
                     easing = LinearOutSlowInEasing
                 )
-            ),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                4.dp
             )
-        ),
+            .liquidGlass(radius = 20.dp, blurAmount = 16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         shape = shape,
-        onClick = {
-            expandedState = !expandedState
-        }
+        onClick = { expandedState = !expandedState }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(padding)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     modifier = Modifier
                         .weight(6f)
@@ -142,18 +135,15 @@ fun ExpandableCard(
                     modifier = Modifier
                         .weight(1f)
                         .rotate(rotationState),
-                    onClick = {
-                        expandedState = !expandedState
-                    }) {
+                    onClick = { expandedState = !expandedState }
+                ) {
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = "Drop-Down Arrow"
                     )
                 }
             }
-            if (expandedState) {
-                content()
-            }
+            if (expandedState) content()
         }
     }
 }
@@ -169,7 +159,7 @@ fun ExpandableTextCard(
     descriptionFontSize: TextUnit = 14.sp,
     descriptionFontWeight: FontWeight = FontWeight.Normal,
     descriptionFontFamily: FontFamily = greenstashFont,
-    shape: Shape = RoundedCornerShape(8.dp),
+    shape: Shape = RoundedCornerShape(20.dp),
     padding: Dp = 12.dp,
     showCopyButton: Boolean = false,
     urlToOpen: String? = null
@@ -229,9 +219,7 @@ fun ExpandableTextCard(
 
             if (urlToOpen != null) {
                 FilledTonalButton(
-                    onClick = {
-                        Utils.openWebLink(context, urlToOpen)
-                    },
+                    onClick = { Utils.openWebLink(context, urlToOpen) },
                     modifier = Modifier.padding(start = 8.dp, top = 8.dp)
                 ) {
                     Row {
