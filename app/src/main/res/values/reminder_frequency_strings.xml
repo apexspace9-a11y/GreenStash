@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reminder_frequency_daily">Daily</string>
+    <string name="reminder_frequency_semiweekly">Several times a week</string>
+    <string name="reminder_frequency_weekly">Weekly</string>
+    <string name="reminder_notification_title">%1$s reminder for %2$s</string>
+</resources>
