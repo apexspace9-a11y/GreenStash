@@ -1,100 +1,76 @@
-/**
- * MIT License
- *
- * Copyright (c) [2022 - Present] Stɑrry Shivɑm
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
-
 package com.starry.greenstash.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF316A42)
+// Mộc Quỹ: emerald + aqua palette tuned for translucent Liquid Glass surfaces.
+val primaryLight = Color(0xFF006B55)
 val onPrimaryLight = Color(0xFFFFFFFF)
-val primaryContainerLight = Color(0xFFB3F1BE)
-val onPrimaryContainerLight = Color(0xFF00210C)
-val secondaryLight = Color(0xFF506352)
+val primaryContainerLight = Color(0xFF8AF8D7)
+val onPrimaryContainerLight = Color(0xFF002019)
+val secondaryLight = Color(0xFF3F665D)
 val onSecondaryLight = Color(0xFFFFFFFF)
-val secondaryContainerLight = Color(0xFFD3E8D3)
-val onSecondaryContainerLight = Color(0xFF0E1F12)
-val tertiaryLight = Color(0xFF3A656E)
+val secondaryContainerLight = Color(0xFFC2EBDE)
+val onSecondaryContainerLight = Color(0xFF00201A)
+val tertiaryLight = Color(0xFF3A6376)
 val onTertiaryLight = Color(0xFFFFFFFF)
-val tertiaryContainerLight = Color(0xFFBDEAF5)
-val onTertiaryContainerLight = Color(0xFF001F25)
+val tertiaryContainerLight = Color(0xFFBEE9FF)
+val onTertiaryContainerLight = Color(0xFF001F2A)
 val errorLight = Color(0xFFBA1A1A)
 val onErrorLight = Color(0xFFFFFFFF)
 val errorContainerLight = Color(0xFFFFDAD6)
 val onErrorContainerLight = Color(0xFF410002)
-val backgroundLight = Color(0xFFF6FBF3)
-val onBackgroundLight = Color(0xFF181D18)
-val surfaceLight = Color(0xFFF6FBF3)
-val onSurfaceLight = Color(0xFF181D18)
-val surfaceVariantLight = Color(0xFFDDE5DA)
-val onSurfaceVariantLight = Color(0xFF414941)
-val outlineLight = Color(0xFF717971)
-val outlineVariantLight = Color(0xFFC1C9BF)
+val backgroundLight = Color(0xFFF2FBF7)
+val onBackgroundLight = Color(0xFF14201C)
+val surfaceLight = Color(0xEAF7FCF9)
+val onSurfaceLight = Color(0xFF14201C)
+val surfaceVariantLight = Color(0xD8D9E8E2)
+val onSurfaceVariantLight = Color(0xFF3D4945)
+val outlineLight = Color(0xFF6D7A75)
+val outlineVariantLight = Color(0x88BCCAC4)
 val scrimLight = Color(0xFF000000)
-val inverseSurfaceLight = Color(0xFF2D322D)
-val inverseOnSurfaceLight = Color(0xFFEEF2EA)
-val inversePrimaryLight = Color(0xFF98D4A4)
-val surfaceDimLight = Color(0xFFD7DBD4)
-val surfaceBrightLight = Color(0xFFF6FBF3)
-val surfaceContainerLowestLight = Color(0xFFFFFFFF)
-val surfaceContainerLowLight = Color(0xFFF0F5ED)
-val surfaceContainerLight = Color(0xFFEBEFE7)
-val surfaceContainerHighLight = Color(0xFFE5EAE2)
-val surfaceContainerHighestLight = Color(0xFFDFE4DC)
+val inverseSurfaceLight = Color(0xFF29332F)
+val inverseOnSurfaceLight = Color(0xFFF0F9F5)
+val inversePrimaryLight = Color(0xFF69DBBB)
+val surfaceDimLight = Color(0xD7D4DED9)
+val surfaceBrightLight = Color(0xEFFFFFFF)
+val surfaceContainerLowestLight = Color(0xF2FFFFFF)
+val surfaceContainerLowLight = Color(0xDDF0F8F4)
+val surfaceContainerLight = Color(0xD6EAF4EF)
+val surfaceContainerHighLight = Color(0xCCE4EEE9)
+val surfaceContainerHighestLight = Color(0xC6DEE9E4)
 
-val primaryDark = Color(0xFF98D4A4)
-val onPrimaryDark = Color(0xFF003919)
-val primaryContainerDark = Color(0xFF16512C)
-val onPrimaryContainerDark = Color(0xFFB3F1BE)
-val secondaryDark = Color(0xFFB7CCB7)
-val onSecondaryDark = Color(0xFF233426)
-val secondaryContainerDark = Color(0xFF394B3B)
-val onSecondaryContainerDark = Color(0xFFD3E8D3)
-val tertiaryDark = Color(0xFFA2CED9)
-val onTertiaryDark = Color(0xFF01363F)
-val tertiaryContainerDark = Color(0xFF204D56)
-val onTertiaryContainerDark = Color(0xFFBDEAF5)
+val primaryDark = Color(0xFF69DBBB)
+val onPrimaryDark = Color(0xFF00382B)
+val primaryContainerDark = Color(0xFF00513F)
+val onPrimaryContainerDark = Color(0xFF8AF8D7)
+val secondaryDark = Color(0xFFA7CFC3)
+val onSecondaryDark = Color(0xFF10372E)
+val secondaryContainerDark = Color(0xFF294E45)
+val onSecondaryContainerDark = Color(0xFFC2EBDE)
+val tertiaryDark = Color(0xFFA3CDE2)
+val onTertiaryDark = Color(0xFF053548)
+val tertiaryContainerDark = Color(0xFF244C5E)
+val onTertiaryContainerDark = Color(0xFFBEE9FF)
 val errorDark = Color(0xFFFFB4AB)
 val onErrorDark = Color(0xFF690005)
 val errorContainerDark = Color(0xFF93000A)
 val onErrorContainerDark = Color(0xFFFFDAD6)
-val backgroundDark = Color(0xFF101510)
-val onBackgroundDark = Color(0xFFDFE4DC)
-val surfaceDark = Color(0xFF101510)
-val onSurfaceDark = Color(0xFFDFE4DC)
-val surfaceVariantDark = Color(0xFF414941)
-val onSurfaceVariantDark = Color(0xFFC1C9BF)
-val outlineDark = Color(0xFF8B938A)
-val outlineVariantDark = Color(0xFF414941)
+val backgroundDark = Color(0xFF071A16)
+val onBackgroundDark = Color(0xFFDCE8E3)
+val surfaceDark = Color(0xD9142520)
+val onSurfaceDark = Color(0xFFDCE8E3)
+val surfaceVariantDark = Color(0xB83D4A45)
+val onSurfaceVariantDark = Color(0xFFBBCAC4)
+val outlineDark = Color(0xFF85948E)
+val outlineVariantDark = Color(0x78404D48)
 val scrimDark = Color(0xFF000000)
-val inverseSurfaceDark = Color(0xFFDFE4DC)
-val inverseOnSurfaceDark = Color(0xFF2D322D)
-val inversePrimaryDark = Color(0xFF316A42)
-val surfaceDimDark = Color(0xFF101510)
-val surfaceBrightDark = Color(0xFF353A35)
-val surfaceContainerLowestDark = Color(0xFF0B0F0B)
-val surfaceContainerLowDark = Color(0xFF181D18)
-val surfaceContainerDark = Color(0xFF1C211C)
-val surfaceContainerHighDark = Color(0xFF262B26)
-val surfaceContainerHighestDark = Color(0xFF313631)
+val inverseSurfaceDark = Color(0xFFDCE8E3)
+val inverseOnSurfaceDark = Color(0xFF29332F)
+val inversePrimaryDark = Color(0xFF006B55)
+val surfaceDimDark = Color(0xE00A1713)
+val surfaceBrightDark = Color(0xD92E3D37)
+val surfaceContainerLowestDark = Color(0xE006110E)
+val surfaceContainerLowDark = Color(0xD912211C)
+val surfaceContainerDark = Color(0xD51A2924)
+val surfaceContainerHighDark = Color(0xCF23322D)
+val surfaceContainerHighestDark = Color(0xC92D3C36)
