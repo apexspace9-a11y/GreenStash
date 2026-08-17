@@ -1,0 +1,29 @@
+name: VunQuy
+options:
+  bundleIdPrefix: vn.vunquy
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CURRENT_PROJECT_VERSION: 500
+    MARKETING_VERSION: 5.0.0
+targets:
+  VunQuy:
+    type: application
+    platform: iOS
+    sources:
+      - path: VunQuy
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: vn.vunquy.app
+        PRODUCT_NAME: VunQuy
+        INFOPLIST_FILE: VunQuy/Info.plist
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_STYLE: Automatic
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    scheme:
+      testTargets: []
+      gatherCoverageData: false
