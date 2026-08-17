@@ -1,264 +1,236 @@
 <resources>
-    <string name="app_name" translatable="false">GreenStash</string>
+    <string name="app_name" translatable="false">VunQuỹ</string>
 
-    <!-- Other Strings -->
-    <string name="confirm">Confirm</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
-    <string name="unknown_error">Oops! Something went wrong</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="cancel">Hủy</string>
+    <string name="ok">Đồng ý</string>
+    <string name="unknown_error">Đã xảy ra lỗi. Vui lòng thử lại</string>
 
-    <!-- Navigation Drawer -->
-    <string name="drawer_home">Home</string>
-    <string name="drawer_archive">Archive</string>
-    <string name="drawer_backup">Backup</string>
-    <string name="drawer_settings">Settings</string>
-    <string name="drawer_rating">Rate Us</string>
-    <string name="drawer_share">Share</string>
-    <string name="drawer_privacy">Privacy</string>
-    <string name="drawer_footer_text">Made with ❤️ in India</string>
-    <string name="drawer_share_message">
-        Hey! Check out this amazing app called GreenStash.
-        It makes planning and managing your savings goals a breeze, helping you establish the habit of saving money for better things.
-        Download it now from the Play Store: %s
-    </string>
+    <string name="drawer_home">Trang chủ</string>
+    <string name="drawer_archive">Đã lưu trữ</string>
+    <string name="drawer_backup">Sao lưu</string>
+    <string name="drawer_settings">Cài đặt</string>
+    <string name="drawer_rating">Đánh giá</string>
+    <string name="drawer_share">Chia sẻ</string>
+    <string name="drawer_privacy">Quyền riêng tư</string>
+    <string name="drawer_footer_text">VunQuỹ • Tích lũy theo cách của bạn</string>
+    <string name="drawer_share_message">Mình đang dùng VunQuỹ để theo dõi các mục tiêu tiết kiệm. Bạn có thể xem ứng dụng tại: %s</string>
 
-    <!-- Biometric Lock -->
-    <string name="bio_lock_title">Unlock GreenStash</string>
-    <string name="bio_lock_subtitle">Confirm your screen lock, PIN or password</string>
-    <string name="auth_successful">Authentication succeeded!</string>
-    <string name="auth_failed">Authentication failed!</string>
-    <string name="auth_error">Authentication error: %s</string>
+    <string name="bio_lock_title">Mở khóa VunQuỹ</string>
+    <string name="bio_lock_subtitle">Xác nhận khóa màn hình, mã PIN hoặc mật khẩu</string>
+    <string name="auth_successful">Xác thực thành công</string>
+    <string name="auth_failed">Xác thực không thành công</string>
+    <string name="auth_error">Lỗi xác thực: %s</string>
 
-    <!-- Welcome Screen. -->
-    <string name="welcome_screen_text">Hello! Please select your preferred currency to get started</string>
-    <string name="welcome_screen_button">Get Started!</string>
+    <string name="welcome_screen_text">Chào bạn! Hãy chọn đơn vị tiền tệ để bắt đầu</string>
+    <string name="welcome_screen_button">Bắt đầu</string>
 
-    <!-- App Lock Screen -->
-    <string name="app_lock_screen_title">GreenStash is locked</string>
-    <string name="app_lock_screen_subtitle">Click the button below to authenticate</string>
-    <string name="app_lock_button_text">Authorize</string>
-    <string name="app_lock_button_icon_desc">Unlock App</string>
-    <string name="app_lock_unable_to_authenticate">App-lock is disabled because the device is unable to authenticate</string>
+    <string name="app_lock_screen_title">VunQuỹ đang được khóa</string>
+    <string name="app_lock_screen_subtitle">Xác thực để tiếp tục</string>
+    <string name="app_lock_button_text">Xác thực</string>
+    <string name="app_lock_button_icon_desc">Mở khóa ứng dụng</string>
+    <string name="app_lock_unable_to_authenticate">Khóa ứng dụng đã tắt vì thiết bị không hỗ trợ phương thức xác thực phù hợp</string>
 
-    <!-- Home Screen -->
-    <string name="home_screen_header">Saving Goals</string>
-    <string name="menu_button_desc">Open side menu</string>
-    <string name="filter_button_desc">Filter your saving goals</string>
-    <string name="search_button_desc">Search for specific saving goal</string>
-    <string name="new_goal_fab">New Goal</string>
-    <string name="new_goal_onboarding_title">Let\'s start by creating a new saving goal!</string>
-    <string name="new_goal_onboarding_desc">Click on the floating action button to create a new saving goal</string>
-    <string name="home_search_label">Search here…</string>
-    <string name="search_goal_not_found">404: Goal not found!</string>
-    <string name="filter_title">Title</string>
-    <string name="filter_amount">Amount</string>
-    <string name="filter_priority">Priority</string>
-    <string name="sort_ascending">Ascending</string>
-    <string name="sort_descending">Descending</string>
+    <string name="home_screen_header">Mục tiêu tiết kiệm</string>
+    <string name="menu_button_desc">Mở menu</string>
+    <string name="filter_button_desc">Lọc mục tiêu tiết kiệm</string>
+    <string name="search_button_desc">Tìm mục tiêu tiết kiệm</string>
+    <string name="new_goal_fab">Mục tiêu mới</string>
+    <string name="new_goal_onboarding_title">Bắt đầu bằng một mục tiêu tiết kiệm mới</string>
+    <string name="new_goal_onboarding_desc">Chạm nút thêm để tạo mục tiêu đầu tiên</string>
+    <string name="home_search_label">Tìm mục tiêu…</string>
+    <string name="search_goal_not_found">Không tìm thấy mục tiêu phù hợp</string>
+    <string name="filter_title">Tên</string>
+    <string name="filter_amount">Số tiền</string>
+    <string name="filter_priority">Ưu tiên</string>
+    <string name="sort_ascending">Tăng dần</string>
+    <string name="sort_descending">Giảm dần</string>
 
-    <!-- Deposit & Withdraw Screen -->
-    <string name="deposit_screen_title">Awesome! Enter amount</string>
-    <string name="withdraw_screen_title">Cool! Enter amount</string>
-    <string name="deposit_successful">Deposited Successfully!</string>
-    <string name="withdraw_successful">Withdrawn Successfully!</string>
-    <string name="withdraw_overflow_error">Amount is more than current deposited amount!</string>
+    <string name="deposit_screen_title">Nhập số tiền muốn thêm</string>
+    <string name="withdraw_screen_title">Nhập số tiền muốn rút</string>
+    <string name="deposit_successful">Đã thêm tiền thành công</string>
+    <string name="withdraw_successful">Đã rút tiền thành công</string>
+    <string name="withdraw_overflow_error">Số tiền rút lớn hơn số tiền hiện có</string>
 
-    <!-- Congratulations Screen -->
-    <string name="goal_achieved_heading">Congratulations 🥳</string>
-    <string name="goal_achieved_subtext">You\'ve reached your saving goal! Your hard work and commitment have led to this well-deserved accomplishment. Celebrate your success! 🎉</string>
-    <string name="goal_achieved_button">Go back to home</string>
+    <string name="goal_achieved_heading">Bạn đã hoàn thành 🥳</string>
+    <string name="goal_achieved_subtext">Mục tiêu tiết kiệm đã đạt được. Một bước nhỏ đều đặn cuối cùng cũng thành kết quả đáng ăn mừng 🎉</string>
+    <string name="goal_achieved_button">Về trang chủ</string>
 
-    <!-- Strings used for dashboard saving goals cards -->
-    <string name="no_goal_set">No Saving Goals Set</string>
-    <string name="transaction_amount">Amount</string>
-    <string name="deposit_button">Deposit</string>
-    <string name="goal_already_achieved">You\'ve already achieved this goal</string>
-    <string name="withdraw_button">Withdraw</string>
-    <string name="withdraw_button_error">You haven\'t deposited any amount yet</string>
-    <string name="archive_button">Archive</string>
-    <string name="goal_archive_confirmation">This goal has been completed! Would you like to archive it?</string>
-    <string name="goal_archive_success">Archived Successfully</string>
-    <string name="goal_delete_confirmation">Are you sure?</string>
-    <string name="goal_delete_success">Deleted Successfully</string>
-    <string name="info_button_description">View goal information</string>
-    <string name="edit_button_description">Edit this goal</string>
-    <string name="delete_button_description">Delete This Goal</string>
-    <string name="add_fab_button_title">New goal</string>
-    <string name="progress_greet1">You\'re off to great start!</string>
-    <string name="progress_greet2">Keep on keeping on!</string>
-    <string name="progress_greet3">If you think you can do it, you can</string>
-    <string name="progress_greet4">Almost there, You got this!</string>
-    <string name="progress_greet5">Congratulations &#x1F389;</string>
-    <string name="currently_saved_incomplete">Currently saved %1$s out of %2$s</string>
-    <string name="currently_saved_complete">You\'ve saved %1$s out of %2$s</string>
-    <!-- Eg: You have until 25/12/2022 (152) days left. -->
-    <string name="goal_days_left">You have until %1$s (%2$s) days left</string>
-    <!-- Eg: You need to save around $2/day, $20/week, $200/month -->
-    <string name="goal_approx_saving">You need to save around %s/</string>
-    <string name="goal_approx_saving_day">day</string>
-    <string name="goal_approx_saving_week">week</string>
-    <string name="goal_approx_saving_month">month</string>
-    <string name="no_goal_deadline_set">As you\'ve not specified any deadline, you got all the time in the world!</string>
-    <string name="goal_achieved_desc">It\'s time to celebrate all the hard work that led to this joyful occasion!</string>
+    <string name="no_goal_set">Chưa có mục tiêu tiết kiệm</string>
+    <string name="transaction_amount">Số tiền</string>
+    <string name="deposit_button">Thêm tiền</string>
+    <string name="goal_already_achieved">Mục tiêu này đã hoàn thành</string>
+    <string name="withdraw_button">Rút tiền</string>
+    <string name="withdraw_button_error">Bạn chưa thêm khoản tiền nào</string>
+    <string name="archive_button">Lưu trữ</string>
+    <string name="goal_archive_confirmation">Mục tiêu đã hoàn thành. Bạn muốn lưu trữ mục tiêu này?</string>
+    <string name="goal_archive_success">Đã lưu trữ</string>
+    <string name="goal_delete_confirmation">Bạn chắc chắn muốn xóa?</string>
+    <string name="goal_delete_success">Đã xóa</string>
+    <string name="info_button_description">Xem chi tiết mục tiêu</string>
+    <string name="edit_button_description">Chỉnh sửa mục tiêu</string>
+    <string name="delete_button_description">Xóa mục tiêu</string>
+    <string name="add_fab_button_title">Mục tiêu mới</string>
+    <string name="progress_greet1">Khởi đầu rất tốt!</string>
+    <string name="progress_greet2">Cứ đều đặn như vậy nhé!</string>
+    <string name="progress_greet3">Bạn đang tiến gần hơn mỗi ngày</string>
+    <string name="progress_greet4">Sắp tới đích rồi!</string>
+    <string name="progress_greet5">Hoàn thành 🎉</string>
+    <string name="currently_saved_incomplete">Đã tiết kiệm %1$s / %2$s</string>
+    <string name="currently_saved_complete">Bạn đã tiết kiệm %1$s / %2$s</string>
+    <string name="goal_days_left">Còn đến %1$s (%2$s ngày)</string>
+    <string name="goal_approx_saving">Nên tiết kiệm khoảng %s/</string>
+    <string name="goal_approx_saving_day">ngày</string>
+    <string name="goal_approx_saving_week">tuần</string>
+    <string name="goal_approx_saving_month">tháng</string>
+    <string name="no_goal_deadline_set">Không đặt hạn chót, bạn có thể tích lũy theo nhịp phù hợp</string>
+    <string name="goal_achieved_desc">Thành quả này xứng đáng được ăn mừng!</string>
 
-    <!-- Goal Info Screen -->
-    <string name="info_screen_header">Goal Information</string>
-    <string name="info_card_title">You\'ve Saved</string>
-    <string name="info_card_remaining_amount">Out of %s</string>
-    <string name="info_card_remaining_days">%s days left</string>
-    <string name="info_card_no_deadline_set">No deadline set</string>
-    <string name="info_card_goal_achieved">Goal achieved! 🎉</string>
-    <string name="info_goal_priority">Goal Priority is %s</string>
-    <string name="info_reminder_status_on">Reminders are enabled</string>
-    <string name="info_reminder_status_off">Reminders are disabled</string>
-    <string name="info_notes_card_title">Notes</string>
-    <string name="info_copy_notes_button">Copy</string>
-    <string name="info_copy_notes_icon_desc">Copy Notes</string>
-    <string name="info_copy_notes_alert">Copied Successfully!</string>
-    <string name="info_goal_no_transactions">No Transactions Yet</string>
-    <string name="info_edit_transaction_button">Update Transaction</string>
-    <string name="info_duplicate_transaction_button">Duplicate Transaction</string>
-    <string name="info_transaction_swipe_tip">Tip! Swipe transactions left or right to edit or delete them</string>
+    <string name="info_screen_header">Chi tiết mục tiêu</string>
+    <string name="info_card_title">Đã tiết kiệm</string>
+    <string name="info_card_remaining_amount">trên %s</string>
+    <string name="info_card_remaining_days">Còn %s ngày</string>
+    <string name="info_card_no_deadline_set">Không có hạn chót</string>
+    <string name="info_card_goal_achieved">Đã hoàn thành 🎉</string>
+    <string name="info_goal_priority">Mức ưu tiên: %s</string>
+    <string name="info_reminder_status_on">Nhắc nhở đang bật</string>
+    <string name="info_reminder_status_off">Nhắc nhở đang tắt</string>
+    <string name="info_notes_card_title">Ghi chú</string>
+    <string name="info_copy_notes_button">Sao chép</string>
+    <string name="info_copy_notes_icon_desc">Sao chép ghi chú</string>
+    <string name="info_copy_notes_alert">Đã sao chép</string>
+    <string name="info_goal_no_transactions">Chưa có giao dịch</string>
+    <string name="info_edit_transaction_button">Cập nhật giao dịch</string>
+    <string name="info_duplicate_transaction_button">Nhân bản giao dịch</string>
+    <string name="info_transaction_swipe_tip">Vuốt giao dịch sang trái hoặc phải để sửa hoặc xóa</string>
 
-    <!-- Input (New/Edit Goal) Screen -->
-    <string name="input_screen_header">It\'s time to save!</string>
-    <string name="input_edit_goal_header">Edit Saving Goal</string>
-    <string name="input_pick_icon">Select icon for your goal</string>
-    <string name="input_pick_icon_onboarding_title">…Or if minimalism is your style, add an icon for your goal</string>
-    <string name="input_pick_icon_onboarding_desc">Goal icons will be used on compact styled goal cards, Settings > Goal Card Style</string>
-    <string name="input_pick_image_fab">Goal Image</string>
-    <string name="input_pick_image_onboarding_title">Add images to your goals to give them a personalized look!</string>
-    <string name="input_pick_image_onboarding_desc">Click on the floating action button to add an image to your goal</string>
-    <string name="input_page_quote" translatable="false">You don\'t have to see the whole staircase, just take the first step. – Martin Luther King, Jr.  </string>
-    <string name="input_goal_priority">Select priority for your goal</string>
-    <string name="priority_high">High</string>
-    <string name="priority_normal">Normal</string>
-    <string name="priority_low">Low</string>
-    <string name="input_goal_reminder">Saving Reminders</string>
-    <string name="input_goal_reminders_onboarding_title">Enable Reminders to Stay Updated on Your Goals!</string>
-    <string name="input_goal_reminders_onboarding_desc">Reminders will be sent daily, semiweekly, or weekly, depending on goal priority</string>
-    <string name="input_text_title">Goal Title</string>
-    <string name="title_empty_err">Woops! Title is empty</string>
-    <string name="input_text_amount">Target Amount</string>
-    <string name="amount_empty_err">Woops! Amount is empty or Invalid</string>
-    <string name="input_deadline">Deadline (Optional)</string>
-    <string name="input_additional_notes">Notes (Optional)</string>
-    <string name="input_add_goal_button">Set New Saving Goal</string>
-    <string name="input_edit_goal_button">Update Saving Goal</string>
-    <string name="input_goal_saved_success">Great! Saving goal set</string>
-    <string name="input_goad_edit_success">Saving goal updated</string>
-    <string name="input_goal_remove_deadline">Do you want to remove deadline from this goal?</string>
-    <string name="input_remove_deadline_tip">Tip! You can remove the deadline from existing goals by long-pressing on the deadline field</string>
+    <string name="input_screen_header">Tạo mục tiêu tiết kiệm</string>
+    <string name="input_edit_goal_header">Chỉnh sửa mục tiêu</string>
+    <string name="input_pick_icon">Chọn biểu tượng cho mục tiêu</string>
+    <string name="input_pick_icon_onboarding_title">Bạn cũng có thể dùng biểu tượng tối giản cho mục tiêu</string>
+    <string name="input_pick_icon_onboarding_desc">Biểu tượng được dùng với kiểu thẻ thu gọn trong Cài đặt &gt; Kiểu thẻ mục tiêu</string>
+    <string name="input_pick_image_fab">Ảnh mục tiêu</string>
+    <string name="input_pick_image_onboarding_title">Thêm ảnh để mục tiêu dễ nhận biết hơn</string>
+    <string name="input_pick_image_onboarding_desc">Chạm nút ảnh để chọn hình cho mục tiêu</string>
+    <string name="input_page_quote" translatable="false">Mỗi khoản nhỏ đều đưa bạn gần mục tiêu hơn.</string>
+    <string name="input_goal_priority">Chọn mức ưu tiên</string>
+    <string name="priority_high">Cao</string>
+    <string name="priority_normal">Bình thường</string>
+    <string name="priority_low">Thấp</string>
+    <string name="input_goal_reminder">Nhắc tiết kiệm</string>
+    <string name="input_goal_reminders_onboarding_title">Bật nhắc nhở để duy trì thói quen tích lũy</string>
+    <string name="input_goal_reminders_onboarding_desc">Tần suất nhắc thay đổi theo mức ưu tiên của mục tiêu</string>
+    <string name="input_text_title">Tên mục tiêu</string>
+    <string name="title_empty_err">Hãy nhập tên mục tiêu</string>
+    <string name="input_text_amount">Số tiền mục tiêu</string>
+    <string name="amount_empty_err">Số tiền trống hoặc không hợp lệ</string>
+    <string name="input_deadline">Hạn chót (không bắt buộc)</string>
+    <string name="input_additional_notes">Ghi chú (không bắt buộc)</string>
+    <string name="input_add_goal_button">Tạo mục tiêu</string>
+    <string name="input_edit_goal_button">Lưu thay đổi</string>
+    <string name="input_goal_saved_success">Đã tạo mục tiêu</string>
+    <string name="input_goad_edit_success">Đã cập nhật mục tiêu</string>
+    <string name="input_goal_remove_deadline">Xóa hạn chót của mục tiêu này?</string>
+    <string name="input_remove_deadline_tip">Nhấn giữ trường hạn chót để xóa hạn đã đặt</string>
 
-    <!-- Archive Screen -->
-    <string name="archive_screen_header">Archived Goals</string>
-    <string name="archive_empty">No archived goals yet</string>
-    <string name="goal_restore_confirmation">Do you want to restore this goal?</string>
-    <string name="goal_restore_success">Restored Successfully</string>
+    <string name="archive_screen_header">Mục tiêu đã lưu trữ</string>
+    <string name="archive_empty">Chưa có mục tiêu nào được lưu trữ</string>
+    <string name="goal_restore_confirmation">Khôi phục mục tiêu này?</string>
+    <string name="goal_restore_success">Đã khôi phục</string>
 
-    <!-- Backup Screen -->
-    <string name="backup_screen_header">Backup &amp; Restore</string>
-    <string name="backup_screen_text">Backup app data including all of your saving goals, current progress, transactions etc and easily restore it whenever you want</string>
-    <string name="backup_screen_sub_text">Please note that backups do not include app settings</string>
-    <string name="backup_button">Backup</string>
-    <string name="backup_restore_button">Restore</string>
-    <string name="backup_select_file_type">Select backup file format</string>
-    <string name="backup_csv_note">Note: Due to limitations of the CSV format, goal images will not be backed up</string>
-    <string name="backup_ftp_create_button">Create Backup</string>
-    <string name="backup_ftp_restore_button">Restore Backup</string>
-    <string name="backup_restore_success">Backup restored successfully!</string>
-    <!-- Automatic Backups -->
-    <string name="auto_backup_settings_title">Automatic Backups</string>
-    <string name="auto_backup_setting">Enable Auto Backups</string>
-    <string name="auto_backup_setting_desc">Automatically backup your data to a selected folder</string>
-    <string name="auto_backup_directory_setting">Backup Directory</string>
-    <string name="auto_backup_directory_setting_desc">Select a folder where backups will be saved</string>
-    <string name="auto_backup_interval_setting">Backup Interval</string>
-    <string name="auto_backup_interval_days">Every %d days</string>
-    <string name="auto_backup_max_keep_setting">Max Backups to Keep</string>
-    <string name="auto_backup_max_keep_count">%d Backups</string>
-    <string name="auto_backup_last_time_title">Last Backup</string>
-    <string name="auto_backup_last_time_format">Last backup: %s</string>
-    <string name="auto_backup_never">Never</string>
+    <string name="backup_screen_header">Sao lưu &amp; khôi phục</string>
+    <string name="backup_screen_text">Sao lưu mục tiêu, tiến độ và giao dịch để có thể khôi phục khi cần</string>
+    <string name="backup_screen_sub_text">Bản sao lưu không bao gồm cài đặt ứng dụng</string>
+    <string name="backup_button">Sao lưu</string>
+    <string name="backup_restore_button">Khôi phục</string>
+    <string name="backup_select_file_type">Chọn định dạng sao lưu</string>
+    <string name="backup_csv_note">Định dạng CSV không thể lưu ảnh của mục tiêu</string>
+    <string name="backup_ftp_create_button">Tạo bản sao lưu</string>
+    <string name="backup_ftp_restore_button">Khôi phục bản sao lưu</string>
+    <string name="backup_restore_success">Khôi phục dữ liệu thành công</string>
+    <string name="auto_backup_settings_title">Sao lưu tự động</string>
+    <string name="auto_backup_setting">Bật sao lưu tự động</string>
+    <string name="auto_backup_setting_desc">Tự động sao lưu dữ liệu vào thư mục bạn chọn</string>
+    <string name="auto_backup_directory_setting">Thư mục sao lưu</string>
+    <string name="auto_backup_directory_setting_desc">Chọn nơi lưu các bản sao</string>
+    <string name="auto_backup_interval_setting">Chu kỳ sao lưu</string>
+    <string name="auto_backup_interval_days">Mỗi %d ngày</string>
+    <string name="auto_backup_max_keep_setting">Số bản sao tối đa</string>
+    <string name="auto_backup_max_keep_count">%d bản sao</string>
+    <string name="auto_backup_last_time_title">Lần sao lưu gần nhất</string>
+    <string name="auto_backup_last_time_format">Lần sao lưu gần nhất: %s</string>
+    <string name="auto_backup_never">Chưa từng</string>
 
-    <!-- Settings Screen -->
-    <string name="settings_screen_header">Settings</string>
-    <string name="display_settings_title">Display</string>
-    <string name="theme_setting">Default Theme</string>
-    <string name="theme_dialog_title">Change Theme</string>
-    <string name="theme_dialog_option1">Light</string>
-    <string name="theme_dialog_option2">Dark</string>
-    <string name="theme_dialog_option3">System Default</string>
-    <string name="amoled_theme_setting">Black Theme</string>
-    <string name="amoled_theme_desc">Enable black AMOLED theme</string>
-    <string name="theme_dialog_apply_button">Apply</string>
+    <string name="settings_screen_header">Cài đặt</string>
+    <string name="display_settings_title">Hiển thị</string>
+    <string name="theme_setting">Giao diện</string>
+    <string name="theme_dialog_title">Chọn giao diện</string>
+    <string name="theme_dialog_option1">Sáng</string>
+    <string name="theme_dialog_option2">Tối</string>
+    <string name="theme_dialog_option3">Theo hệ thống</string>
+    <string name="amoled_theme_setting">Nền đen AMOLED</string>
+    <string name="amoled_theme_desc">Dùng nền đen tuyệt đối ở chế độ tối</string>
+    <string name="theme_dialog_apply_button">Áp dụng</string>
     <string name="material_you_setting" translatable="false">Material You</string>
-    <string name="material_you_setting_desc">Switch theme according to your wallpaper (A12+ Only)</string>
-    <string name="material_you_error">This feature is only for devices running Android 12 or above</string>
-    <string name="goal_card_setting">Goal Card Style</string>
-    <string name="preview">Preview</string>
-    <string name="preview_example_title">Home Decorations</string>
-    <string name="preview_example_primary_text">You\'re off to a great start! Currently saved %1$s out of %2$s</string>
-    <string name="preview_example_secondary_text">You have until 26/05/2023 (85) days left. You need to save around %1$s/day, %2$s/week, %3$s/month</string>
-    <string name="goal_card_option1">Classic</string>
-    <string name="goal_card_option2">Compact</string>
-    <string name="locales_setting_title">Locales</string>
-    <string name="app_locale_setting">Default Locale</string>
-    <string name="app_locale_setting_desc">Select your preferred locale</string>
-    <string name="date_format_setting">Date Format</string>
-    <string name="date_format_dialog_title">Change Date Format</string>
-    <string name="preferred_currency_setting">Preferred Currency</string>
-    <string name="currency_dialog_title">Select Preferred currency</string>
-    <string name="search_currency">Search currency</string>
-    <string name="search">Search</string>
-    <string name="security_settings_title">Security</string>
-    <string name="app_lock_setting">Biometric Lock</string>
-    <string name="app_lock_setting_desc">Use your fingerprint or screen lock password to unlock GreenStash</string>
-    <string name="misc_setting_title">Miscellaneous</string>
-    <string name="license_setting">License &amp; Acknowledgement</string>
-    <string name="license_setting_desc">Show open source license information</string>
-    <string name="app_info_setting">App Information</string>
-    <string name="app_info_setting_desc">Show app version and useful links</string>
-    <!-- Accessibility strings for settings -->
-    <string name="switch_action_close">Close</string>
-    <string name="switch_action_open">Open</string>
-    <string name="switch_state_close">off</string>
-    <string name="switch_state_open">on</string>
-    <string name="navigate_back_desc">Navigate Back</string>
+    <string name="material_you_setting_desc">Đồng bộ màu giao diện với hình nền trên Android 12 trở lên</string>
+    <string name="material_you_error">Tính năng này cần Android 12 trở lên</string>
+    <string name="goal_card_setting">Kiểu thẻ mục tiêu</string>
+    <string name="preview">Xem trước</string>
+    <string name="preview_example_title">Trang trí nhà</string>
+    <string name="preview_example_primary_text">Khởi đầu rất tốt! Đã tiết kiệm %1$s / %2$s</string>
+    <string name="preview_example_secondary_text">Còn đến 26/05/2027 (85 ngày). Nên tiết kiệm khoảng %1$s/ngày, %2$s/tuần, %3$s/tháng</string>
+    <string name="goal_card_option1">Nổi bật</string>
+    <string name="goal_card_option2">Thu gọn</string>
+    <string name="locales_setting_title">Ngôn ngữ &amp; khu vực</string>
+    <string name="app_locale_setting">Ngôn ngữ ứng dụng</string>
+    <string name="app_locale_setting_desc">Chọn ngôn ngữ bạn muốn sử dụng</string>
+    <string name="date_format_setting">Định dạng ngày</string>
+    <string name="date_format_dialog_title">Chọn định dạng ngày</string>
+    <string name="preferred_currency_setting">Đơn vị tiền tệ</string>
+    <string name="currency_dialog_title">Chọn đơn vị tiền tệ</string>
+    <string name="search_currency">Tìm đơn vị tiền tệ</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="security_settings_title">Bảo mật</string>
+    <string name="app_lock_setting">Khóa sinh trắc học</string>
+    <string name="app_lock_setting_desc">Dùng vân tay hoặc khóa màn hình để mở VunQuỹ</string>
+    <string name="misc_setting_title">Khác</string>
+    <string name="license_setting">Giấy phép &amp; ghi nhận</string>
+    <string name="license_setting_desc">Xem thông tin giấy phép nguồn mở</string>
+    <string name="app_info_setting">Thông tin ứng dụng</string>
+    <string name="app_info_setting_desc">Xem phiên bản và các liên kết hữu ích</string>
+    <string name="switch_action_close">Tắt</string>
+    <string name="switch_action_open">Bật</string>
+    <string name="switch_state_close">đang tắt</string>
+    <string name="switch_state_open">đang bật</string>
+    <string name="navigate_back_desc">Quay lại</string>
 
-    <!-- Goal Card Style -->
-    <string name="goal_card_settings_header">Goal Style</string>
-    <string name="goal_card_settings_tip">Tip! You can swipe a compact-styled card left or right to either edit or delete a savings goal</string>
+    <string name="goal_card_settings_header">Kiểu thẻ mục tiêu</string>
+    <string name="goal_card_settings_tip">Với thẻ thu gọn, vuốt trái hoặc phải để sửa hoặc xóa mục tiêu</string>
 
-    <!-- OSL Screen -->
-    <string name="osl_screen_header">Open Source Libraries</string>
+    <string name="osl_screen_header">Thư viện nguồn mở</string>
 
-    <!-- About Screen -->
-    <string name="about_screen_header">About</string>
-    <string name="about_readme_title">README</string>
-    <string name="about_readme_desc">Checkout the GitHub repository and the app\'s README</string>
-    <string name="about_website_title">Website</string>
-    <string name="about_website_desc">Checkout our website for more information and explore our other apps and projects</string>
-    <string name="about_privacy_title">Privacy Policy</string>
-    <string name="about_privacy_desc">Read our latest privacy policy and terms of service on GitHub</string>
-    <string name="about_gh_issue_title">GitHub Issues</string>
-    <string name="about_gh_issue_desc">Submit bug reports or feature requests by creating an issue on GitHub</string>
-    <string name="about_telegram_title">Telegram Group</string>
-    <string name="about_telegram_desc">Join us at telegram to share your ideas or just to chat!</string>
-    <string name="about_support_title">Support Development</string>
-    <string name="about_support_desc">If you think I deserve cookies for my work, you can buy me some by clicking here</string>
-    <string name="about_version_title">Version</string>
-    <string name="about_version_desc">Version-%s</string>
+    <string name="about_screen_header">Giới thiệu</string>
+    <string name="about_readme_title">Mã nguồn</string>
+    <string name="about_readme_desc">Xem kho mã nguồn và tài liệu dự án trên GitHub</string>
+    <string name="about_website_title">Trang web</string>
+    <string name="about_website_desc">Xem thông tin và các dự án liên quan</string>
+    <string name="about_privacy_title">Chính sách quyền riêng tư</string>
+    <string name="about_privacy_desc">Đọc chính sách quyền riêng tư và điều khoản sử dụng</string>
+    <string name="about_gh_issue_title">Báo lỗi trên GitHub</string>
+    <string name="about_gh_issue_desc">Gửi báo lỗi hoặc đề xuất tính năng</string>
+    <string name="about_telegram_title">Cộng đồng Telegram</string>
+    <string name="about_telegram_desc">Tham gia thảo luận và chia sẻ ý tưởng</string>
+    <string name="about_support_title">Ủng hộ phát triển</string>
+    <string name="about_support_desc">Hỗ trợ duy trì và phát triển dự án</string>
+    <string name="about_version_title">Phiên bản</string>
+    <string name="about_version_desc">Phiên bản %s</string>
 
-    <!-- Widget Screen -->
-    <string name="widget_config_screen_header">Select Goal</string>
-    <string name="goal_widget_desc">Saved %s</string>
+    <string name="widget_config_screen_header">Chọn mục tiêu</string>
+    <string name="goal_widget_desc">Đã tiết kiệm %s</string>
 
-    <!-- Goal Reminders -->
-    <string name="notification_permission_error">Please grant notifications permission! 😾</string>
-    <string name="reminder_notification_desc">The more you save, the quicker you\'ll reach your goal! 💰</string>
-    <string name="dismiss_notification_button">Dismiss</string>
-    <string name="notification_deposited_title">Great Work 🎉</string>
-    <string name="notification_deposited_desc">Successfully deposited %s!</string>
-
+    <string name="notification_permission_error">Hãy cấp quyền thông báo để dùng nhắc nhở</string>
+    <string name="reminder_notification_desc">Mỗi khoản tiết kiệm đều đưa bạn gần mục tiêu hơn 💰</string>
+    <string name="dismiss_notification_button">Bỏ qua</string>
+    <string name="notification_deposited_title">Tốt lắm 🎉</string>
+    <string name="notification_deposited_desc">Đã thêm %s vào mục tiêu</string>
 </resources>
