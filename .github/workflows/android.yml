@@ -22,11 +22,17 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
       - name: Grant execute permission
         run: chmod +x gradlew
-      - name: Build release APK
-        run: ./gradlew assembleRelease
-      - name: Upload APK
+      - name: Build release and installable APKs
+        run: ./gradlew assembleRelease assembleSideload
+      - name: Upload installable APK
         uses: actions/upload-artifact@v4
         with:
-          name: MocQuy-Android
+          name: MocQuy-Android-Installable
+          path: app/build/outputs/apk/sideload/*.apk
+          if-no-files-found: error
+      - name: Upload unsigned release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: MocQuy-Android-Release
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
