@@ -5,7 +5,6 @@
  */
 package com.starry.greenstash.ui.screens.settings
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.LiveData
@@ -23,7 +22,7 @@ class SettingsViewModel @Inject constructor(
 
     private val _theme = MutableLiveData(ThemeMode.Auto)
     private val _amoledTheme = MutableLiveData(false)
-    private val _materialYou = MutableLiveData(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+    private val _materialYou = MutableLiveData(false)
     private val _goalCardStyle = MutableLiveData(GoalCardStyle.Classic)
     private val _dateStyle = MutableLiveData(DateStyle.DD_MM_YYYY)
 
@@ -34,11 +33,15 @@ class SettingsViewModel @Inject constructor(
     val dateStyle: LiveData<DateStyle> = _dateStyle
 
     init {
-        _theme.value = ThemeMode.entries.toTypedArray()[getThemeValue()]
+        _theme.value = ThemeMode.entries.getOrElse(getThemeValue()) { ThemeMode.Auto }
         _amoledTheme.value = getAmoledThemeValue()
         _materialYou.value = getMaterialYouValue()
-        _goalCardStyle.value = GoalCardStyle.entries.toTypedArray()[getGoalCardStyleValue()]
-        _dateStyle.value = DateStyle.entries.toTypedArray()[getDateStyleValue()]
+        _goalCardStyle.value = GoalCardStyle.entries.getOrElse(getGoalCardStyleValue()) {
+            GoalCardStyle.Classic
+        }
+        _dateStyle.value = DateStyle.entries.getOrElse(getDateStyleValue()) {
+            DateStyle.DD_MM_YYYY
+        }
     }
 
     fun setTheme(newTheme: ThemeMode) {
@@ -84,9 +87,11 @@ class SettingsViewModel @Inject constructor(
 
     @Composable
     fun getCurrentTheme(): ThemeMode {
-        return if (theme.value == ThemeMode.Auto) {
-            if (isSystemInDarkTheme()) ThemeMode.Dark else ThemeMode.Light
-        } else theme.value!!
+        return when (theme.value ?: ThemeMode.Auto) {
+            ThemeMode.Auto -> if (isSystemInDarkTheme()) ThemeMode.Dark else ThemeMode.Light
+            ThemeMode.Dark -> ThemeMode.Dark
+            ThemeMode.Light -> ThemeMode.Light
+        }
     }
 
     private fun getThemeValue() = preferenceUtil.getInt(
@@ -98,7 +103,7 @@ class SettingsViewModel @Inject constructor(
     )
 
     private fun getMaterialYouValue() = preferenceUtil.getBoolean(
-        PreferenceUtil.MATERIAL_YOU_BOOL, Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+        PreferenceUtil.MATERIAL_YOU_BOOL, false
     )
 
     private fun getGoalCardStyleValue() = preferenceUtil.getInt(
