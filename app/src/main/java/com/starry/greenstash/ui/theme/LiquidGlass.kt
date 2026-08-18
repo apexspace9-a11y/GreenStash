@@ -35,20 +35,20 @@ fun MocQuyBackground(content: @Composable BoxScope.() -> Unit) {
     val hazeState = rememberHazeState()
     val dark = MaterialTheme.colorScheme.background.luminance() < 0.5f
 
-    val base = if (dark) Color(0xFF0B1510) else Color(0xFFF7F5EF)
-    val mid = if (dark) Color(0xFF10231A) else Color(0xFFEEF3EC)
-    val end = if (dark) Color(0xFF171B14) else Color(0xFFF5EFE2)
+    val base = if (dark) Color(0xFF18261F) else Color(0xFFF7F5EF)
+    val mid = if (dark) Color(0xFF24392F) else Color(0xFFEEF3EC)
+    val end = if (dark) Color(0xFF32392E) else Color(0xFFF5EFE2)
     val jadeGlow = if (dark) {
-        Color(0xFF4F9E78).copy(alpha = 0.16f)
+        Color(0xFF69B58D).copy(alpha = 0.18f)
     } else {
         Color(0xFF79B596).copy(alpha = 0.13f)
     }
     val mossGlow = if (dark) {
-        Color(0xFF879B72).copy(alpha = 0.09f)
+        Color(0xFFA0B588).copy(alpha = 0.12f)
     } else {
         Color(0xFFA5B692).copy(alpha = 0.10f)
     }
-    val brassGlow = Color(0xFFC5A86A).copy(alpha = if (dark) 0.07f else 0.09f)
+    val brassGlow = Color(0xFFC5A86A).copy(alpha = if (dark) 0.10f else 0.09f)
 
     Box(
         modifier = Modifier
@@ -100,15 +100,15 @@ fun Modifier.liquidGlass(
     val primary = MaterialTheme.colorScheme.primary
 
     val baseTint = if (dark) {
-        Color(0xFF132019).copy(alpha = 0.48f)
+        Color(0xFF31443A).copy(alpha = 0.58f)
     } else {
         Color(0xFFFFFEFA).copy(alpha = 0.48f)
     }
-    val topWash = Color.White.copy(alpha = if (dark) 0.055f else 0.16f)
-    val bottomWash = primary.copy(alpha = if (dark) 0.035f else 0.035f)
-    val rimBright = Color.White.copy(alpha = if (dark) 0.20f else 0.56f)
-    val rimTint = primary.copy(alpha = if (dark) 0.12f else 0.10f)
-    val shadowColor = Color.Black.copy(alpha = if (dark) 0.22f else 0.08f)
+    val topWash = Color.White.copy(alpha = if (dark) 0.10f else 0.16f)
+    val bottomWash = primary.copy(alpha = if (dark) 0.055f else 0.035f)
+    val rimBright = Color.White.copy(alpha = if (dark) 0.28f else 0.56f)
+    val rimTint = primary.copy(alpha = if (dark) 0.14f else 0.10f)
+    val shadowColor = Color.Black.copy(alpha = if (dark) 0.16f else 0.08f)
 
     val blurLayer = if (hazeState != null) {
         Modifier.hazeEffect(state = hazeState) {
@@ -152,7 +152,7 @@ fun Modifier.liquidGlass(
         .drawWithCache {
             val topSpecular = Brush.radialGradient(
                 colors = listOf(
-                    Color.White.copy(alpha = if (dark) 0.16f else 0.30f),
+                    Color.White.copy(alpha = if (dark) 0.22f else 0.30f),
                     Color.Transparent
                 ),
                 center = Offset(size.width * 0.14f, size.height * -0.08f),
@@ -162,7 +162,7 @@ fun Modifier.liquidGlass(
                 drawContent()
                 drawRect(topSpecular)
                 drawRoundRect(
-                    color = Color.White.copy(alpha = if (dark) 0.07f else 0.13f),
+                    color = Color.White.copy(alpha = if (dark) 0.10f else 0.13f),
                     cornerRadius = androidx.compose.ui.geometry.CornerRadius((radius - 1.dp).toPx()),
                     style = Stroke(width = 0.8.dp.toPx())
                 )
