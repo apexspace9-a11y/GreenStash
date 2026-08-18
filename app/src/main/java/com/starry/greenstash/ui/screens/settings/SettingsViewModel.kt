@@ -20,7 +20,7 @@ class SettingsViewModel @Inject constructor(
     private val preferenceUtil: PreferenceUtil
 ) : ViewModel() {
 
-    private val _theme = MutableLiveData(ThemeMode.Auto)
+    private val _theme = MutableLiveData(ThemeMode.Light)
     private val _amoledTheme = MutableLiveData(false)
     private val _materialYou = MutableLiveData(false)
     private val _goalCardStyle = MutableLiveData(GoalCardStyle.Classic)
@@ -33,7 +33,7 @@ class SettingsViewModel @Inject constructor(
     val dateStyle: LiveData<DateStyle> = _dateStyle
 
     init {
-        _theme.value = ThemeMode.entries.getOrElse(getThemeValue()) { ThemeMode.Auto }
+        _theme.value = ThemeMode.entries.getOrElse(getThemeValue()) { ThemeMode.Light }
         _amoledTheme.value = getAmoledThemeValue()
         _materialYou.value = getMaterialYouValue()
         _goalCardStyle.value = GoalCardStyle.entries.getOrElse(getGoalCardStyleValue()) {
@@ -87,7 +87,7 @@ class SettingsViewModel @Inject constructor(
 
     @Composable
     fun getCurrentTheme(): ThemeMode {
-        return when (theme.value ?: ThemeMode.Auto) {
+        return when (theme.value ?: ThemeMode.Light) {
             ThemeMode.Auto -> if (isSystemInDarkTheme()) ThemeMode.Dark else ThemeMode.Light
             ThemeMode.Dark -> ThemeMode.Dark
             ThemeMode.Light -> ThemeMode.Light
@@ -95,7 +95,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun getThemeValue() = preferenceUtil.getInt(
-        PreferenceUtil.APP_THEME_INT, ThemeMode.Auto.ordinal
+        PreferenceUtil.APP_THEME_INT, ThemeMode.Light.ordinal
     )
 
     private fun getAmoledThemeValue() = preferenceUtil.getBoolean(
