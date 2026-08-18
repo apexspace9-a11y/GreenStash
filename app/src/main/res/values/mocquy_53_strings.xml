@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_header_greeting_morning">Good morning</string>
+    <string name="home_header_greeting_afternoon">Good afternoon</string>
+    <string name="home_header_greeting_evening">Good evening</string>
+    <string name="home_header_goal_summary">%1$d goals · %2$d completed</string>
+
+    <string name="drawer_brand_tagline">Save steadily for what matters</string>
+    <string name="drawer_section_quick">Quick actions</string>
+    <string name="drawer_section_navigation">Navigation</string>
+    <string name="drawer_section_utilities">Utilities</string>
+    <string name="drawer_quick_new_goal">New goal</string>
+    <string name="drawer_quick_new_goal_desc">Start a new saving plan</string>
+    <string name="drawer_quick_backup">Backup</string>
+    <string name="drawer_quick_backup_desc">Protect your saving data</string>
+    <string name="drawer_home_desc">Track goals and saving progress</string>
+    <string name="drawer_archive_desc">Review completed and archived goals</string>
+    <string name="drawer_backup_desc">Backup and restore your data</string>
+    <string name="drawer_settings_desc">Personalize Mộc Quỹ</string>
+    <string name="drawer_share_desc">Share Mộc Quỹ with someone</string>
+    <string name="drawer_privacy_desc">Read privacy information</string>
+    <string name="drawer_version">Mộc Quỹ %s</string>
+</resources>

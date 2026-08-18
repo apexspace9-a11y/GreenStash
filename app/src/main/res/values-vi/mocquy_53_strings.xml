@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_header_greeting_morning">Chào buổi sáng</string>
+    <string name="home_header_greeting_afternoon">Chào buổi chiều</string>
+    <string name="home_header_greeting_evening">Chào buổi tối</string>
+    <string name="home_header_goal_summary">%1$d mục tiêu · %2$d hoàn thành</string>
+
+    <string name="drawer_brand_tagline">Tích lũy đều cho điều quan trọng</string>
+    <string name="drawer_section_quick">Thao tác nhanh</string>
+    <string name="drawer_section_navigation">Điều hướng</string>
+    <string name="drawer_section_utilities">Tiện ích</string>
+    <string name="drawer_quick_new_goal">Mục tiêu mới</string>
+    <string name="drawer_quick_new_goal_desc">Bắt đầu một kế hoạch tiết kiệm</string>
+    <string name="drawer_quick_backup">Sao lưu</string>
+    <string name="drawer_quick_backup_desc">Bảo vệ dữ liệu tiết kiệm</string>
+    <string name="drawer_home_desc">Theo dõi mục tiêu và tiến độ</string>
+    <string name="drawer_archive_desc">Xem mục tiêu đã hoàn tất và lưu trữ</string>
+    <string name="drawer_backup_desc">Sao lưu và khôi phục dữ liệu</string>
+    <string name="drawer_settings_desc">Cá nhân hóa Mộc Quỹ</string>
+    <string name="drawer_share_desc">Chia sẻ Mộc Quỹ với người khác</string>
+    <string name="drawer_privacy_desc">Xem thông tin quyền riêng tư</string>
+    <string name="drawer_version">Mộc Quỹ %s</string>
+</resources>
