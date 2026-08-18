@@ -1,28 +1,3 @@
-/**
- * MIT License
- *
- * Copyright (c) [2022 - Present] Stɑrry Shivɑm
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
-
 package com.starry.greenstash.ui.screens.settings.composables
 
 import android.annotation.SuppressLint
@@ -32,8 +7,8 @@ import android.provider.Settings
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -52,22 +27,17 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Style
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
@@ -78,7 +48,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -87,7 +56,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -104,12 +72,12 @@ import com.starry.greenstash.ui.screens.settings.SettingsViewModel
 import com.starry.greenstash.ui.screens.settings.ThemeMode
 import com.starry.greenstash.ui.screens.settings.dateStyleToDisplayFormat
 import com.starry.greenstash.ui.theme.greenstashFont
+import com.starry.greenstash.ui.theme.liquidGlass
 import com.starry.greenstash.utils.Utils
 import com.starry.greenstash.utils.getActivity
 import com.starry.greenstash.utils.toToast
 import com.starry.greenstash.utils.weakHapticFeedback
 import java.util.concurrent.Executor
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,258 +85,225 @@ fun SettingsScreen(navController: NavController) {
     val view = LocalView.current
     val context = LocalContext.current
     val viewModel = (context.getActivity() as MainActivity).settingsViewModel
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier.fillMaxSize(),
+        containerColor = Color.Transparent,
         topBar = {
-            LargeTopAppBar(
+            TopAppBar(
                 title = {
                     Text(
-                        stringResource(id = R.string.settings_screen_header),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        fontFamily = greenstashFont
+                        text = stringResource(R.string.settings_screen_header),
+                        fontFamily = greenstashFont,
+                        fontWeight = FontWeight.SemiBold
                     )
-                }, navigationIcon = {
+                },
+                navigationIcon = {
                     IconButton(
                         onClick = {
                             view.weakHapticFeedback()
                             navController.navigateUp()
                         },
-                        Modifier.semantics {
+                        modifier = Modifier.semantics {
                             onClick(label = context.getString(R.string.navigate_back_desc)) { true }
-                        }) {
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null
                         )
                     }
-                }, scrollBehavior = scrollBehavior, colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface,
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent
                 )
             )
-        },
-    ) {
-        LazyColumn(modifier = Modifier.padding(it)) {
-            /** Display Settings */
-            item { DisplaySettings(viewModel = viewModel, navController = navController) }
-
-            /** Locales Setting */
-            item { LocaleSettings(viewModel = viewModel) }
-
-            /** Security Settings. */
-            item { SecuritySettings(viewModel = viewModel) }
-
-            /** About Setting */
-            item { MiscSettings(navController = navController) }
+        }
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            contentPadding = PaddingValues(bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            item { DisplaySettings(viewModel, navController) }
+            item { LocaleSettings(viewModel) }
+            item { SecuritySettings(viewModel) }
+            item { MiscSettings(navController) }
         }
     }
 }
 
 @Composable
-private fun DisplaySettings(viewModel: SettingsViewModel, navController: NavController) {
+private fun DisplaySettings(
+    viewModel: SettingsViewModel,
+    navController: NavController
+) {
     val context = LocalContext.current
-    val showThemeSheet = remember { mutableStateOf(false) }
+    val showThemeDialog = rememberSaveable { mutableStateOf(false) }
+    val theme = viewModel.theme.observeAsState(ThemeMode.Auto).value
+    val goalStyle = viewModel.goalCardStyle.observeAsState(GoalCardStyle.Classic).value
+    val materialYou = viewModel.materialYou.observeAsState(false)
+    val amoledTheme = viewModel.amoledTheme.observeAsState(false)
 
-    // Theme related values.
-    val themeValue = when (viewModel.theme.value!!) {
-        ThemeMode.Light -> stringResource(id = R.string.theme_dialog_option1)
-        ThemeMode.Dark -> stringResource(id = R.string.theme_dialog_option2)
-        else -> stringResource(id = R.string.theme_dialog_option3)
+    val themeValue = when (theme) {
+        ThemeMode.Light -> stringResource(R.string.theme_dialog_option1)
+        ThemeMode.Dark -> stringResource(R.string.theme_dialog_option2)
+        ThemeMode.Auto -> stringResource(R.string.theme_dialog_option3)
+    }
+    val goalStyleValue = when (goalStyle) {
+        GoalCardStyle.Classic -> stringResource(R.string.goal_card_option1)
+        GoalCardStyle.Compact -> stringResource(R.string.goal_card_option2)
     }
 
-    val goalStyleValue = when (viewModel.goalCardStyle.value!!) {
-        GoalCardStyle.Classic -> stringResource(id = R.string.goal_card_option1)
-        GoalCardStyle.Compact -> stringResource(id = R.string.goal_card_option2)
-    }
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    SettingsContainer {
-        SettingsCategory(title = stringResource(id = R.string.display_settings_title))
+    SettingsSection(title = stringResource(R.string.display_settings_title)) {
         SettingsItem(
-            title = stringResource(id = R.string.theme_setting),
+            title = stringResource(R.string.theme_setting),
             description = themeValue,
             icon = Icons.Filled.BrightnessMedium,
-            onClick = { showThemeSheet.value = true })
-
+            onClick = { showThemeDialog.value = true }
+        )
         SettingsItem(
-            title = stringResource(id = R.string.amoled_theme_setting),
-            description = stringResource(id = R.string.amoled_theme_desc),
+            title = stringResource(R.string.amoled_theme_setting),
+            description = stringResource(R.string.amoled_theme_desc),
             icon = Icons.Filled.Contrast,
-            switchState = viewModel.amoledTheme.observeAsState(initial = false),
-            onCheckChange = { newValue ->
-                viewModel.setAmoledTheme(newValue)
+            switchState = amoledTheme,
+            onCheckChange = viewModel::setAmoledTheme
+        )
+        SettingsItem(
+            title = stringResource(R.string.material_you_setting),
+            description = stringResource(R.string.material_you_setting_desc),
+            icon = Icons.Filled.Palette,
+            switchState = materialYou,
+            onCheckChange = { enabled ->
+                if (enabled && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                    viewModel.setMaterialYou(false)
+                    context.getString(R.string.material_you_error).toToast(context)
+                } else {
+                    viewModel.setMaterialYou(enabled)
+                }
             }
         )
-
         SettingsItem(
-            title = stringResource(id = R.string.material_you_setting),
-            description = stringResource(
-                id = R.string.material_you_setting_desc
-            ),
-            icon = Icons.Filled.Palette,
-            switchState = viewModel.materialYou.observeAsState(initial = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S),
-            onCheckChange = { newValue ->
-                if (newValue) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        viewModel.setMaterialYou(true)
-                    } else {
-                        viewModel.setMaterialYou(false)
-                        context.getString(R.string.material_you_error).toToast(context)
-                    }
-                } else {
-                    viewModel.setMaterialYou(false)
-                }
-            })
-
-        SettingsItem(
-            title = stringResource(id = R.string.goal_card_setting),
+            title = stringResource(R.string.goal_card_setting),
             description = goalStyleValue,
             icon = Icons.Filled.Style,
-            onClick = { navController.navigate(OtherScreens.GoalCardStyleScreen) })
+            onClick = { navController.navigate(OtherScreens.GoalCardStyleScreen) }
+        )
+    }
 
-        if (showThemeSheet.value) {
-            ThemePickerDialog(
-                themeValue = themeValue,
-                showThemeDialog = showThemeSheet,
-                onThemeChange = { newTheme ->
-                    viewModel.setTheme(newTheme)
-                }
-            )
-        }
+    if (showThemeDialog.value) {
+        ThemePickerDialog(
+            selectedTheme = theme,
+            showDialog = showThemeDialog,
+            onThemeChange = viewModel::setTheme
+        )
     }
 }
 
 @Composable
 private fun ThemePickerDialog(
-    themeValue: String,
-    showThemeDialog: MutableState<Boolean>,
-    onThemeChange: (ThemeMode) -> Unit,
+    selectedTheme: ThemeMode,
+    showDialog: MutableState<Boolean>,
+    onThemeChange: (ThemeMode) -> Unit
 ) {
-    val context = LocalContext.current
-    val themeRadioOptions = listOf(
-        stringResource(id = R.string.theme_dialog_option1),
-        stringResource(id = R.string.theme_dialog_option2),
-        stringResource(id = R.string.theme_dialog_option3)
+    val options = listOf(
+        ThemeMode.Light to stringResource(R.string.theme_dialog_option1),
+        ThemeMode.Dark to stringResource(R.string.theme_dialog_option2),
+        ThemeMode.Auto to stringResource(R.string.theme_dialog_option3)
     )
-    val (selectedThemeOption, onThemeOptionSelected) = remember {
-        mutableStateOf(themeValue)
-    }
+    val selected = remember(selectedTheme) { mutableStateOf(selectedTheme) }
 
-    if (showThemeDialog.value) {
-        AlertDialog(onDismissRequest = {
-            showThemeDialog.value = false
-        }, title = {
+    AlertDialog(
+        onDismissRequest = { showDialog.value = false },
+        title = {
             Text(
-                text = stringResource(id = R.string.theme_dialog_title),
-                color = MaterialTheme.colorScheme.onSurface,
+                text = stringResource(R.string.theme_dialog_title),
+                fontFamily = greenstashFont
             )
-        }, text = {
-            Column(
-                modifier = Modifier.selectableGroup(),
-                verticalArrangement = Arrangement.Center,
-            ) {
-                themeRadioOptions.forEach { text ->
+        },
+        text = {
+            Column(modifier = Modifier.selectableGroup()) {
+                options.forEach { (theme, label) ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(46.dp)
+                            .height(48.dp)
                             .selectable(
-                                selected = (text == selectedThemeOption),
-                                onClick = { onThemeOptionSelected(text) },
-                                role = Role.RadioButton,
+                                selected = selected.value == theme,
+                                onClick = { selected.value = theme },
+                                role = Role.RadioButton
                             ),
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
-                            selected = (text == selectedThemeOption),
-                            onClick = null,
-                            colors = RadioButtonDefaults.colors(
-                                selectedColor = MaterialTheme.colorScheme.primary,
-                                unselectedColor = MaterialTheme.colorScheme.inversePrimary,
-                                disabledSelectedColor = Color.Black,
-                                disabledUnselectedColor = Color.Black
-                            ),
+                            selected = selected.value == theme,
+                            onClick = null
                         )
                         Text(
-                            text = text,
-                            modifier = Modifier.padding(start = 16.dp),
-                            color = MaterialTheme.colorScheme.onSurface,
+                            text = label,
+                            modifier = Modifier.padding(start = 12.dp),
                             fontFamily = greenstashFont
                         )
                     }
                 }
             }
-        }, confirmButton = {
+        },
+        confirmButton = {
             FilledTonalButton(
                 onClick = {
-                    showThemeDialog.value = false
-                    onThemeChange(
-                        when (selectedThemeOption) {
-                            context.getString(R.string.theme_dialog_option1) -> ThemeMode.Light
-                            context.getString(R.string.theme_dialog_option2) -> ThemeMode.Dark
-                            else -> ThemeMode.Auto
-                        }
-                    )
-                }, colors = ButtonDefaults.filledTonalButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                    onThemeChange(selected.value)
+                    showDialog.value = false
+                }
             ) {
-                Text(stringResource(id = R.string.theme_dialog_apply_button))
+                Text(
+                    text = stringResource(R.string.theme_dialog_apply_button),
+                    fontFamily = greenstashFont
+                )
             }
-        }, dismissButton = {
-            TextButton(onClick = {
-                showThemeDialog.value = false
-            }) {
-                Text(stringResource(id = R.string.cancel))
+        },
+        dismissButton = {
+            TextButton(onClick = { showDialog.value = false }) {
+                Text(
+                    text = stringResource(R.string.cancel),
+                    fontFamily = greenstashFont
+                )
             }
-        })
-    }
+        }
+    )
 }
 
 @SuppressLint("InlinedApi")
 @Composable
 private fun LocaleSettings(viewModel: SettingsViewModel) {
     val context = LocalContext.current
-    // Date related values.
-    val dateValue = dateStyleToDisplayFormat(viewModel.dateStyle.observeAsState().value!!)
+    val dateStyle = viewModel.dateStyle.observeAsState(DateStyle.DD_MM_YYYY).value
+    val dateValue = dateStyleToDisplayFormat(dateStyle)
     val dateDialog = rememberSaveable { mutableStateOf(false) }
-    val dateRadioOptions = DateStyle.entries.map { dateStyleToDisplayFormat(it) }
-    val (selectedDateOption, onDateOptionSelected) = rememberSaveable {
-        mutableStateOf(dateValue)
-    }
-
-    // Currency related values.
+    val selectedDate = rememberSaveable(dateStyle) { mutableStateOf(dateStyle) }
     val currencyDialog = rememberSaveable { mutableStateOf(false) }
-    val currencyNames =
-        context.applicationContext.resources.getStringArray(R.array.currency_names)
-    val currencyValues =
-        context.applicationContext.resources.getStringArray(R.array.currency_values)
 
-    val selectedCurrencyName = rememberSaveable {
-        mutableStateOf(currencyNames[currencyValues.indexOf(viewModel.getDefaultCurrencyValue())])
+    val currencyNames = context.resources.getStringArray(R.array.currency_names)
+    val currencyValues = context.resources.getStringArray(R.array.currency_values)
+    val defaultCode = viewModel.getDefaultCurrencyValue() ?: "VND"
+    val defaultIndex = currencyValues.indexOf(defaultCode)
+        .takeIf { it >= 0 }
+        ?: currencyValues.indexOf("VND").takeIf { it >= 0 }
+        ?: 0
+    val selectedCurrencyName = rememberSaveable(defaultCode) {
+        mutableStateOf(currencyNames.getOrElse(defaultIndex) { defaultCode })
     }
 
-
-    SettingsContainer {
-        SettingsCategory(title = stringResource(id = R.string.locales_setting_title))
-        // App locale setting is only available on Android 13+
-        // Also, it's not functional on MIUI devices even on Android 13,
-        // Thanks to Xiaomi's broken implementation of standard Android APIs.
-        // See: https://github.com/Pool-Of-Tears/GreenStash/issues/130 for more information.
-        val shouldShowAppLocaleSetting = remember {
+    SettingsSection(title = stringResource(R.string.locales_setting_title)) {
+        val showAppLocale = remember {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !Utils.isMiui()
         }
-        if (shouldShowAppLocaleSetting) {
+        if (showAppLocale) {
             SettingsItem(
-                title = stringResource(id = R.string.app_locale_setting),
-                description = stringResource(id = R.string.app_locale_setting_desc),
+                title = stringResource(R.string.app_locale_setting),
+                description = stringResource(R.string.app_locale_setting_desc),
                 icon = Icons.Filled.Language,
                 onClick = {
                     val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
@@ -379,213 +314,198 @@ private fun LocaleSettings(viewModel: SettingsViewModel) {
             )
         }
         SettingsItem(
-            title = stringResource(id = R.string.date_format_setting),
+            title = stringResource(R.string.date_format_setting),
             description = dateValue,
-            icon = ImageVector.vectorResource(id = R.drawable.ic_settings_calender),
-            onClick = { dateDialog.value = true })
-
+            icon = ImageVector.vectorResource(R.drawable.ic_settings_calender),
+            onClick = { dateDialog.value = true }
+        )
         SettingsItem(
-            title = stringResource(id = R.string.preferred_currency_setting),
+            title = stringResource(R.string.preferred_currency_setting),
             description = selectedCurrencyName.value,
-            icon = ImageVector.vectorResource(id = R.drawable.ic_settings_currency),
-            onClick = { currencyDialog.value = true })
+            icon = ImageVector.vectorResource(R.drawable.ic_settings_currency),
+            onClick = { currencyDialog.value = true }
+        )
+    }
 
-        if (dateDialog.value) {
-            AlertDialog(onDismissRequest = {
-                dateDialog.value = false
-            }, title = {
+    if (dateDialog.value) {
+        AlertDialog(
+            onDismissRequest = { dateDialog.value = false },
+            title = {
                 Text(
-                    text = stringResource(id = R.string.date_format_dialog_title),
-                    color = MaterialTheme.colorScheme.onSurface,
+                    text = stringResource(R.string.date_format_dialog_title),
                     fontFamily = greenstashFont
                 )
-            }, text = {
-                Column(
-                    modifier = Modifier.selectableGroup(),
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    dateRadioOptions.forEach { text ->
+            },
+            text = {
+                Column(modifier = Modifier.selectableGroup()) {
+                    DateStyle.entries.forEach { style ->
+                        val label = dateStyleToDisplayFormat(style)
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(46.dp)
+                                .height(48.dp)
                                 .selectable(
-                                    selected = (text == selectedDateOption),
-                                    onClick = { onDateOptionSelected(text) },
-                                    role = Role.RadioButton,
+                                    selected = selectedDate.value == style,
+                                    onClick = { selectedDate.value = style },
+                                    role = Role.RadioButton
                                 ),
-                            verticalAlignment = Alignment.CenterVertically,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
-                                selected = (text == selectedDateOption),
-                                onClick = null,
-                                colors = RadioButtonDefaults.colors(
-                                    selectedColor = MaterialTheme.colorScheme.primary,
-                                    unselectedColor = MaterialTheme.colorScheme.inversePrimary,
-                                    disabledSelectedColor = Color.Black,
-                                    disabledUnselectedColor = Color.Black
-                                ),
+                                selected = selectedDate.value == style,
+                                onClick = null
                             )
                             Text(
-                                text = text,
-                                modifier = Modifier.padding(start = 16.dp),
-                                color = MaterialTheme.colorScheme.onSurface,
+                                text = label,
+                                modifier = Modifier.padding(start = 12.dp),
                                 fontFamily = greenstashFont
                             )
                         }
                     }
                 }
-            }, confirmButton = {
+            },
+            confirmButton = {
                 FilledTonalButton(
                     onClick = {
+                        viewModel.setDateStyle(selectedDate.value)
                         dateDialog.value = false
-                        viewModel.setDateStyle(
-                            DateStyle.entries.first { dateStyleToDisplayFormat(it) == selectedDateOption }
-                        )
-                    }, colors = ButtonDefaults.filledTonalButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    )
+                    }
                 ) {
                     Text(
-                        stringResource(id = R.string.confirm), fontFamily = greenstashFont
+                        text = stringResource(R.string.confirm),
+                        fontFamily = greenstashFont
                     )
                 }
-            }, dismissButton = {
-                TextButton(onClick = {
-                    dateDialog.value = false
-                }) {
+            },
+            dismissButton = {
+                TextButton(onClick = { dateDialog.value = false }) {
                     Text(
-                        stringResource(id = R.string.cancel), fontFamily = greenstashFont
+                        text = stringResource(R.string.cancel),
+                        fontFamily = greenstashFont
                     )
                 }
-            })
-        }
-
-        CurrencyPicker(
-            defaultCurrencyValue = viewModel.getDefaultCurrencyValue()
-                ?: currencyValues.first(),
-            currencyPickerData = CurrencyPickerData(
-                currencyNames = currencyNames,
-                currencyValues = currencyValues,
-            ),
-            showBottomSheet = currencyDialog,
-            onCurrencySelected = { newValue ->
-                viewModel.setDefaultCurrency(newValue)
-                selectedCurrencyName.value = currencyNames[currencyValues.indexOf(newValue)]
-            })
+            }
+        )
     }
+
+    CurrencyPicker(
+        defaultCurrencyValue = currencyValues.getOrElse(defaultIndex) { "VND" },
+        currencyPickerData = CurrencyPickerData(
+            currencyNames = currencyNames,
+            currencyValues = currencyValues
+        ),
+        showBottomSheet = currencyDialog,
+        onCurrencySelected = { code ->
+            viewModel.setDefaultCurrency(code)
+            val index = currencyValues.indexOf(code)
+            selectedCurrencyName.value = if (index >= 0) {
+                currencyNames.getOrElse(index) { code }
+            } else {
+                code
+            }
+        }
+    )
 }
 
 @Composable
 private fun SecuritySettings(viewModel: SettingsViewModel) {
     val context = LocalContext.current
-    val appLockSwitch = remember { mutableStateOf(viewModel.getAppLockValue()) }
+    val appLockSwitch = rememberSaveable { mutableStateOf(viewModel.getAppLockValue()) }
 
-    lateinit var executor: Executor
-    lateinit var biometricPrompt: BiometricPrompt
-    lateinit var promptInfo: BiometricPrompt.PromptInfo
-
-    SettingsContainer {
-        SettingsCategory(title = stringResource(id = R.string.security_settings_title))
+    SettingsSection(title = stringResource(R.string.security_settings_title)) {
         SettingsItem(
-            title = stringResource(id = R.string.app_lock_setting),
-            description = stringResource(id = R.string.app_lock_setting_desc),
+            title = stringResource(R.string.app_lock_setting),
+            description = stringResource(R.string.app_lock_setting_desc),
             icon = Icons.Filled.Lock,
             switchState = appLockSwitch,
-            onCheckChange = { newValue ->
-                appLockSwitch.value = newValue
-                if (newValue) {
-                    val mainActivity = context.getActivity() as MainActivity
-                    executor = ContextCompat.getMainExecutor(context)
-                    biometricPrompt = BiometricPrompt(
-                        mainActivity,
-                        executor,
-                        object : BiometricPrompt.AuthenticationCallback() {
-                            override fun onAuthenticationError(
-                                errorCode: Int, errString: CharSequence
-                            ) {
-                                super.onAuthenticationError(errorCode, errString)
-                                context.getString(R.string.auth_error).format(errString)
-                                    .toToast(context)
-                                // disable preference switch manually on auth error.
-                                appLockSwitch.value = false
-                            }
-
-                            override fun onAuthenticationSucceeded(
-                                result: BiometricPrompt.AuthenticationResult
-                            ) {
-                                super.onAuthenticationSucceeded(result)
-                                context.getString(R.string.auth_successful).toToast(context)
-                                mainActivity.mainViewModel.setAppUnlocked(true)
-                                viewModel.setAppLock(true)
-                            }
-
-                            override fun onAuthenticationFailed() {
-                                super.onAuthenticationFailed()
-                                context.getString(R.string.auth_failed).toToast(context)
-                                // disable preference switch manually on auth error.
-                                appLockSwitch.value = false
-                            }
-                        })
-
-                    promptInfo = BiometricPrompt.PromptInfo.Builder()
-                        .setTitle(context.getString(R.string.bio_lock_title))
-                        .setSubtitle(context.getString(R.string.bio_lock_subtitle))
-                        .setAllowedAuthenticators(Utils.getAuthenticators()).build()
-
-                    biometricPrompt.authenticate(promptInfo)
-                } else {
+            onCheckChange = { enabled ->
+                if (!enabled) {
+                    appLockSwitch.value = false
                     viewModel.setAppLock(false)
+                    return@SettingsItem
                 }
-            })
+
+                val activity = context.getActivity() as MainActivity
+                val executor: Executor = ContextCompat.getMainExecutor(context)
+                val prompt = BiometricPrompt(
+                    activity,
+                    executor,
+                    object : BiometricPrompt.AuthenticationCallback() {
+                        override fun onAuthenticationError(
+                            errorCode: Int,
+                            errString: CharSequence
+                        ) {
+                            appLockSwitch.value = false
+                            context.getString(R.string.auth_error)
+                                .format(errString)
+                                .toToast(context)
+                        }
+
+                        override fun onAuthenticationSucceeded(
+                            result: BiometricPrompt.AuthenticationResult
+                        ) {
+                            appLockSwitch.value = true
+                            activity.mainViewModel.setAppUnlocked(true)
+                            viewModel.setAppLock(true)
+                            context.getString(R.string.auth_successful).toToast(context)
+                        }
+
+                        override fun onAuthenticationFailed() {
+                            appLockSwitch.value = false
+                            context.getString(R.string.auth_failed).toToast(context)
+                        }
+                    }
+                )
+                val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                    .setTitle(context.getString(R.string.bio_lock_title))
+                    .setSubtitle(context.getString(R.string.bio_lock_subtitle))
+                    .setAllowedAuthenticators(Utils.getAuthenticators())
+                    .build()
+                prompt.authenticate(promptInfo)
+            }
+        )
     }
 }
 
 @Composable
 private fun MiscSettings(navController: NavController) {
-    SettingsContainer {
-        SettingsCategory(title = stringResource(id = R.string.misc_setting_title))
+    SettingsSection(title = stringResource(R.string.misc_setting_title)) {
         SettingsItem(
-            title = stringResource(id = R.string.license_setting),
-            description = stringResource(id = R.string.license_setting_desc),
+            title = stringResource(R.string.license_setting),
+            description = stringResource(R.string.license_setting_desc),
             icon = Icons.Filled.LocalPolice,
-            onClick = { navController.navigate(OtherScreens.OSLScreen) })
+            onClick = { navController.navigate(OtherScreens.OSLScreen) }
+        )
         SettingsItem(
-            title = stringResource(id = R.string.app_info_setting),
-            description = stringResource(id = R.string.app_info_setting_desc),
+            title = stringResource(R.string.app_info_setting),
+            description = stringResource(R.string.app_info_setting_desc),
             icon = Icons.Filled.Info,
-            onClick = { navController.navigate(OtherScreens.AboutScreen) })
+            onClick = { navController.navigate(OtherScreens.AboutScreen) }
+        )
     }
-    Spacer(modifier = Modifier.height(2.dp)) // Last item padding.
 }
 
 @Composable
-private fun SettingsContainer(content: @Composable () -> Unit) {
-    Card(
-        modifier = Modifier.padding(vertical = 10.dp, horizontal = 12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                3.dp
-            )
-        ),
-    ) {
-        Column(modifier = Modifier.padding(top = 2.dp)) {
+private fun SettingsSection(
+    title: String,
+    content: @Composable () -> Unit
+) {
+    Column(modifier = Modifier.padding(horizontal = 12.dp)) {
+        Text(
+            text = title,
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 13.sp,
+            fontFamily = greenstashFont,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 10.dp, bottom = 7.dp)
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .liquidGlass(radius = 26.dp, blurAmount = 16.dp)
+                .padding(vertical = 4.dp)
+        ) {
             content()
         }
     }
-}
-
-@Composable
-private fun SettingsCategory(title: String) {
-    Text(
-        text = title,
-        color = MaterialTheme.colorScheme.onBackground,
-        fontSize = 14.sp,
-        fontFamily = greenstashFont,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier
-            .padding(vertical = 8.dp)
-            .padding(horizontal = 14.dp)
-    )
 }
