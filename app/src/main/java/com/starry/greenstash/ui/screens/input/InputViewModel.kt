@@ -62,7 +62,7 @@ class InputViewModel @Inject constructor(
     )
     val showOnboardingTapTargets: State<Boolean> = _showOnboardingTapTargets
 
-    fun addSavingGoal(context: Context, onComplete: () -> Unit, onFailure: () -> Unit) {
+    fun addSavingGoal(context: Context, onComplete: () -> Any?, onFailure: () -> Any?) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 val amount = parseAmount(state.targetAmount) ?: error("Invalid amount")
@@ -115,8 +115,8 @@ class InputViewModel @Inject constructor(
     fun editSavingGoal(
         goalId: Long,
         context: Context,
-        onComplete: () -> Unit,
-        onFailure: () -> Unit
+        onComplete: () -> Any?,
+        onFailure: () -> Any?
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
