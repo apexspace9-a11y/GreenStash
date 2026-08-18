@@ -5,9 +5,6 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.starry.greenstash.MainActivity
 import com.starry.greenstash.MainViewModel
@@ -25,6 +22,8 @@ fun MainScreen(
     showAppContents: Boolean,
     startDestination: BaseScreen,
     currentThemeMode: ThemeMode,
+    shortcutIntent: Intent?,
+    onShortcutConsumed: () -> Unit,
     onAuthRequest: () -> Unit,
 ) {
     AdjustEdgeToEdge(activity = activity, themeState = currentThemeMode)
@@ -33,31 +32,27 @@ fun MainScreen(
         Crossfade(
             targetState = showAppContents,
             label = "AppLockCrossFade",
-            animationSpec = tween(420)
+            animationSpec = tween(260)
         ) { visible ->
             if (visible) {
-                NavGraph(navController = navController, startDestination)
-                val shouldHandleShortCut = remember { mutableStateOf(false) }
-                LaunchedEffect(Unit) { shouldHandleShortCut.value = true }
-                if (shouldHandleShortCut.value) HandleShortcutIntent(activity.intent, navController)
+                NavGraph(navController = navController, startDestination = startDestination)
+                LaunchedEffect(shortcutIntent) {
+                    val intent = shortcutIntent ?: return@LaunchedEffect
+                    if (intent.data?.scheme == MainViewModel.LAUNCHER_SHORTCUT_SCHEME) {
+                        val goalId = intent.getLongExtra(MainViewModel.LC_SHORTCUT_GOAL_ID, -1L)
+                        when {
+                            goalId > 0L -> navController.navigate(
+                                OtherScreens.GoalInfoScreen(goalId.toString())
+                            )
+                            intent.getBooleanExtra(MainViewModel.LC_SHORTCUT_NEW_GOAL, false) ->
+                                navController.navigate(OtherScreens.InputScreen())
+                        }
+                    }
+                    onShortcutConsumed()
+                }
             } else {
                 AppLockedScreen(onAuthRequest = onAuthRequest)
             }
-        }
-    }
-}
-
-@Composable
-private fun HandleShortcutIntent(intent: Intent, navController: NavController) {
-    val data = intent.data
-    if (data != null && data.scheme == MainViewModel.LAUNCHER_SHORTCUT_SCHEME) {
-        val goalId = intent.getLongExtra(MainViewModel.LC_SHORTCUT_GOAL_ID, -100)
-        if (goalId != -100L) {
-            navController.navigate(OtherScreens.GoalInfoScreen(goalId.toString()))
-            return
-        }
-        if (intent.getBooleanExtra(MainViewModel.LC_SHORTCUT_NEW_GOAL, false)) {
-            navController.navigate(OtherScreens.InputScreen())
         }
     }
 }

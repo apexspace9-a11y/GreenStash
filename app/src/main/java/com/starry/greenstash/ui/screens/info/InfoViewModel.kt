@@ -1,28 +1,3 @@
-/**
- * MIT License
- *
- * Copyright (c) [2022 - Present] Stɑrry Shivɑm
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
-
 package com.starry.greenstash.ui.screens.info
 
 import androidx.compose.runtime.getValue
@@ -41,20 +16,13 @@ import com.starry.greenstash.utils.PreferenceUtil
 import com.starry.greenstash.utils.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-data class InfoScreenState(
-    val goalData: Flow<GoalWithTransactions?>? = null
-)
-
-data class EditTransactionState(
-    val amount: String = "",
-    val notes: String = "",
-)
+data class InfoScreenState(val goalData: Flow<GoalWithTransactions?>? = null)
+data class EditTransactionState(val amount: String = "", val notes: String = "")
 
 @HiltViewModel
 class InfoViewModel @Inject constructor(
@@ -62,29 +30,22 @@ class InfoViewModel @Inject constructor(
     private val transactionDao: TransactionDao,
     private val preferenceUtil: PreferenceUtil
 ) : ViewModel() {
-
     var state by mutableStateOf(InfoScreenState())
     var editTransactionState by mutableStateOf(EditTransactionState())
 
     fun loadGoalData(goalId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val goalWithTransactions = goalDao.getGoalWithTransactionByIdAsFlow(goalId)
-            delay(450L)
-            state = state.copy(goalData = goalWithTransactions)
-        }
+        state = state.copy(goalData = goalDao.getGoalWithTransactionByIdAsFlow(goalId))
     }
 
     fun setEditTransactionState(transaction: Transaction) {
         editTransactionState = EditTransactionState(
             amount = transaction.amount.toString(),
-            notes = transaction.notes,
+            notes = transaction.notes
         )
     }
 
     fun deleteTransaction(transaction: Transaction) {
-        viewModelScope.launch(Dispatchers.IO) {
-            transactionDao.deleteTransaction(transaction)
-        }
+        viewModelScope.launch(Dispatchers.IO) { transactionDao.deleteTransaction(transaction) }
     }
 
     fun updateTransaction(
@@ -92,42 +53,40 @@ class InfoViewModel @Inject constructor(
         transactionTime: LocalDateTime,
         transactionType: TransactionType
     ) {
+        val amount = parsedEditAmount() ?: return
+        if (transactionType == TransactionType.Invalid) return
         viewModelScope.launch(Dispatchers.IO) {
-            val newTransaction = transaction.copy(
+            val updated = transaction.copy(
                 type = transactionType,
                 timeStamp = Utils.getEpochTime(transactionTime),
-                amount = NumberUtils.roundDecimal(editTransactionState.amount.toDouble()),
+                amount = amount,
                 notes = editTransactionState.notes
-            )
-            newTransaction.transactionId = transaction.transactionId
-            transactionDao.updateTransaction(newTransaction)
+            ).apply { transactionId = transaction.transactionId }
+            transactionDao.updateTransaction(updated)
         }
     }
 
-    // Duplicate transaction:
-    // Creates a new transaction while respecting the edited fields (if any),
-    // but with a new (current) timestamp.
     fun duplicateTransaction(transaction: Transaction, transactionType: TransactionType) {
+        val amount = parsedEditAmount() ?: return
+        if (transactionType == TransactionType.Invalid) return
         viewModelScope.launch(Dispatchers.IO) {
-            val newTransaction = transaction.copy(
+            val duplicate = transaction.copy(
                 type = transactionType,
                 timeStamp = Utils.getEpochTime(LocalDateTime.now()),
-                amount = NumberUtils.roundDecimal(editTransactionState.amount.toDouble()),
+                amount = amount,
                 notes = editTransactionState.notes
-            )
-            // Reset ID to insert as new entry
-            newTransaction.transactionId = 0L
-            transactionDao.insertTransaction(newTransaction)
+            ).apply { transactionId = 0L }
+            transactionDao.insertTransaction(duplicate)
         }
     }
 
-    fun getDefaultCurrencyValue() = preferenceUtil.getString(
-        PreferenceUtil.DEFAULT_CURRENCY_STR, "$"
-    )!!
+    fun getDefaultCurrencyValue(): String =
+        preferenceUtil.getString(PreferenceUtil.DEFAULT_CURRENCY_STR, "VND").orEmpty()
+            .ifBlank { "VND" }
 
     fun getDateStyle(): DateStyle {
-        return preferenceUtil.getInt(PreferenceUtil.DATE_STYLE_INT, DateStyle.DD_MM_YYYY.ordinal)
-            .let { DateStyle.entries[it] }
+        val index = preferenceUtil.getInt(PreferenceUtil.DATE_STYLE_INT, DateStyle.DD_MM_YYYY.ordinal)
+        return DateStyle.entries.getOrElse(index) { DateStyle.DD_MM_YYYY }
     }
 
     fun shouldShowTransactionTip() = preferenceUtil.getBoolean(
@@ -138,4 +97,8 @@ class InfoViewModel @Inject constructor(
         PreferenceUtil.INFO_TRANSACTION_SWIPE_TIP_BOOL, false
     )
 
+    private fun parsedEditAmount(): Double? = editTransactionState.amount.toDoubleOrNull()
+        ?.takeIf { it.isFinite() && it > 0.0 }
+        ?.let(NumberUtils::roundDecimal)
+        ?.takeIf { it > 0.0 }
 }

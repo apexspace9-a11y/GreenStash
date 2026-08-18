@@ -1,27 +1,3 @@
-/**
- * MIT License
- *
- * Copyright (c) [2022 - Present] Stɑrry Shivɑm
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 package com.starry.greenstash.reminder
 
 import android.app.NotificationManager
@@ -62,48 +38,38 @@ class ReminderNotificationSender(
                 GoalPriority.Low -> R.string.reminder_frequency_weekly
             }
         )
-
         val notification = NotificationCompat.Builder(context, REMINDER_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_reminder_notification)
             .setContentTitle(context.getString(R.string.reminder_notification_title, frequency, goal.title))
             .setContentText(context.getString(R.string.reminder_notification_desc))
             .setStyle(NotificationCompat.BigTextStyle())
             .setContentIntent(createActivityIntent())
+            .setAutoCancel(true)
 
         val remainingAmount = goal.targetAmount - goalItem.getCurrentlySavedAmount()
-        val defCurrency = preferenceUtil.getString(PreferenceUtil.DEFAULT_CURRENCY_STR, "")!!
-        val dateStyle = DateStyle.entries[preferenceUtil.getInt(
-            PreferenceUtil.DATE_STYLE_INT,
-            DateStyle.DD_MM_YYYY.ordinal
-        )]
+        val currency = preferenceUtil.getString(PreferenceUtil.DEFAULT_CURRENCY_STR, "VND")
+            .orEmpty().ifBlank { "VND" }
+        val dateIndex = preferenceUtil.getInt(
+            PreferenceUtil.DATE_STYLE_INT, DateStyle.DD_MM_YYYY.ordinal
+        )
+        val dateStyle = DateStyle.entries.getOrElse(dateIndex) { DateStyle.DD_MM_YYYY }
 
-        if (goal.deadline != 0L) {
-            val calculatedDays = GoalTextUtils.calcRemainingDays(goal.deadline, dateStyle)
-            when (goal.priority) {
-                GoalPriority.High -> {
-                    val amountDay = remainingAmount / calculatedDays.remainingDays
-                    notification.addAction(
-                        R.drawable.ic_notification_deposit,
-                        "${context.getString(R.string.deposit_button)} ${NumberUtils.formatCurrency(NumberUtils.roundDecimal(amountDay), defCurrency)}",
-                        createDepositIntent(goal.goalId, amountDay)
-                    )
-                }
-                GoalPriority.Normal -> {
-                    val amountSemiWeek = remainingAmount / (calculatedDays.remainingDays / 4)
-                    notification.addAction(
-                        R.drawable.ic_notification_deposit,
-                        "${context.getString(R.string.deposit_button)} ${NumberUtils.formatCurrency(NumberUtils.roundDecimal(amountSemiWeek), defCurrency)}",
-                        createDepositIntent(goal.goalId, amountSemiWeek)
-                    )
-                }
-                GoalPriority.Low -> {
-                    val amountWeek = remainingAmount / (calculatedDays.remainingDays / 7)
-                    notification.addAction(
-                        R.drawable.ic_notification_deposit,
-                        "${context.getString(R.string.deposit_button)} ${NumberUtils.formatCurrency(NumberUtils.roundDecimal(amountWeek), defCurrency)}",
-                        createDepositIntent(goal.goalId, amountWeek)
-                    )
-                }
+        if (goal.deadline != 0L && remainingAmount.isFinite() && remainingAmount > 0.0) {
+            val days = GoalTextUtils.calcRemainingDays(goal.deadline, dateStyle)
+                .remainingDays.coerceAtLeast(1L)
+            val periods = when (goal.priority) {
+                GoalPriority.High -> days
+                GoalPriority.Normal -> (days / 4L).coerceAtLeast(1L)
+                GoalPriority.Low -> (days / 7L).coerceAtLeast(1L)
+            }
+            val amount = remainingAmount / periods.toDouble()
+            if (amount.isFinite() && amount > 0.0) {
+                val rounded = NumberUtils.roundDecimal(amount)
+                notification.addAction(
+                    R.drawable.ic_notification_deposit,
+                    "${context.getString(R.string.deposit_button)} ${NumberUtils.formatCurrency(rounded, currency)}",
+                    createDepositIntent(goal.goalId, rounded)
+                )
             }
         }
 
@@ -116,17 +82,19 @@ class ReminderNotificationSender(
     }
 
     fun updateWithDepositNotification(goalId: Long, amount: Double) {
-        val defCurrency = preferenceUtil.getString(PreferenceUtil.DEFAULT_CURRENCY_STR, "")
+        val currency = preferenceUtil.getString(PreferenceUtil.DEFAULT_CURRENCY_STR, "VND")
+            .orEmpty().ifBlank { "VND" }
+        val safeAmount = NumberUtils.roundDecimal(amount)
         val notification = NotificationCompat.Builder(context, REMINDER_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_reminder_notification)
             .setContentTitle(context.getString(R.string.notification_deposited_title))
             .setContentText(
-                context.getString(R.string.notification_deposited_desc).format(
-                    NumberUtils.formatCurrency(NumberUtils.roundDecimal(amount), defCurrency!!)
-                )
+                context.getString(R.string.notification_deposited_desc)
+                    .format(NumberUtils.formatCurrency(safeAmount, currency))
             )
             .setStyle(NotificationCompat.BigTextStyle())
             .setContentIntent(createActivityIntent())
+            .setAutoCancel(true)
             .addAction(
                 R.drawable.ic_notification_dismiss,
                 context.getString(R.string.dismiss_notification_button),
@@ -137,28 +105,35 @@ class ReminderNotificationSender(
 
     fun dismissNotification(goalId: Long) = notificationManager.cancel(goalId.toInt())
 
-    private fun createDepositIntent(goalId: Long, amount: Double) =
-        Intent(context, ReminderDepositReceiver::class.java).apply {
+    private fun createDepositIntent(goalId: Long, amount: Double): PendingIntent {
+        val intent = Intent(context, ReminderDepositReceiver::class.java).apply {
             putExtra(ReminderDepositReceiver.REMINDER_GOAL_ID, goalId)
             putExtra(ReminderDepositReceiver.REMINDER_DEPOSIT_AMOUNT, amount)
-        }.let { intent ->
-            PendingIntent.getBroadcast(
-                context, goalId.toInt() + INTENT_UNIQUE_CODE,
-                intent, PendingIntent.FLAG_IMMUTABLE
-            )
         }
-
-    private fun createDismissIntent(goalId: Long) =
-        Intent(context, ReminderDismissReceiver::class.java).apply {
-            putExtra(ReminderDismissReceiver.REMINDER_GOAL_ID, goalId)
-        }.let { intent ->
-            PendingIntent.getBroadcast(
-                context, goalId.toInt() + INTENT_UNIQUE_CODE,
-                intent, PendingIntent.FLAG_IMMUTABLE
-            )
-        }
-
-    private fun createActivityIntent() = Intent(context, MainActivity::class.java).let { intent ->
-        PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        return PendingIntent.getBroadcast(
+            context,
+            goalId.toInt() + INTENT_UNIQUE_CODE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
     }
+
+    private fun createDismissIntent(goalId: Long): PendingIntent {
+        val intent = Intent(context, ReminderDismissReceiver::class.java).apply {
+            putExtra(ReminderDismissReceiver.REMINDER_GOAL_ID, goalId)
+        }
+        return PendingIntent.getBroadcast(
+            context,
+            goalId.toInt() + INTENT_UNIQUE_CODE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    private fun createActivityIntent(): PendingIntent = PendingIntent.getActivity(
+        context,
+        0,
+        Intent(context, MainActivity::class.java),
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
 }
