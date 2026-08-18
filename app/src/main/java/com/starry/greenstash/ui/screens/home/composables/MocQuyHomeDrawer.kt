@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Share
@@ -64,18 +62,18 @@ fun MocQuyHomeDrawer(
     val selectedItem = remember { mutableStateOf(items.first()) }
 
     ModalDrawerSheet(
+        drawerState = drawerState,
         modifier = Modifier
             .width(304.dp)
             .fillMaxHeight()
-            .liquidGlass(radius = 0.dp, blurAmount = 32.dp),
+            .liquidGlass(radius = 30.dp, blurAmount = 32.dp),
         drawerShape = RoundedCornerShape(topEnd = 30.dp, bottomEnd = 30.dp),
-        containerColor = Color.Transparent,
+        drawerContainerColor = Color.Transparent,
         drawerTonalElevation = 0.dp
     ) {
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 10.dp)
         ) {
             Row(
@@ -170,7 +168,9 @@ fun MocQuyHomeDrawer(
                     )
                 },
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color.Transparent),
+                colors = NavigationDrawerItemDefaults.colors(
+                    unselectedContainerColor = Color.Transparent
+                ),
                 shape = RoundedCornerShape(20.dp)
             )
 
@@ -186,11 +186,13 @@ fun MocQuyHomeDrawer(
                     )
                 },
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
-                colors = NavigationDrawerItemDefaults.colors(unselectedContainerColor = Color.Transparent),
+                colors = NavigationDrawerItemDefaults.colors(
+                    unselectedContainerColor = Color.Transparent
+                ),
                 shape = RoundedCornerShape(20.dp)
             )
 
-            Spacer(Modifier.weight(1f, fill = true))
+            Spacer(Modifier.weight(1f))
 
             Text(
                 text = stringResource(R.string.drawer_footer_text),
