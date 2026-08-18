@@ -8,6 +8,7 @@ package com.starry.greenstash.utils
 import android.content.Context
 import androidx.core.content.edit
 import com.starry.greenstash.ui.screens.settings.DateStyle
+import com.starry.greenstash.ui.screens.settings.ThemeMode
 
 class PreferenceUtil(context: Context) {
 
@@ -22,6 +23,7 @@ class PreferenceUtil(context: Context) {
         const val APP_LOCK_BOOL = "app_lock"
         const val GOAL_CARD_STYLE_INT = "goal_card_style"
         const val MOCQUY_VND_MIGRATION_BOOL = "mocquy_vnd_default_migrated"
+        const val MOCQUY_601_LIGHT_MIGRATION_BOOL = "mocquy_601_light_theme_migrated"
 
         const val GOAL_FILTER_FIELD_INT = "goal_filter_field"
         const val GOAL_FILTER_SORT_TYPE_INT = "goal_filter_sort_type"
@@ -46,6 +48,11 @@ class PreferenceUtil(context: Context) {
         }
         if (!keyExists(DATE_STYLE_INT)) {
             putInt(DATE_STYLE_INT, DateStyle.DD_MM_YYYY.ordinal)
+        }
+        if (!getBoolean(MOCQUY_601_LIGHT_MIGRATION_BOOL, false)) {
+            putInt(APP_THEME_INT, ThemeMode.Light.ordinal)
+            putBoolean(AMOLED_THEME_BOOL, false)
+            putBoolean(MOCQUY_601_LIGHT_MIGRATION_BOOL, true)
         }
     }
 

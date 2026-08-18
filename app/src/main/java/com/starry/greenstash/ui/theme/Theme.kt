@@ -186,7 +186,7 @@ fun GreenStashTheme(
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
-    val themeState = settingsViewModel.theme.observeAsState(initial = ThemeMode.Auto)
+    val themeState = settingsViewModel.theme.observeAsState(initial = ThemeMode.Light)
     val amoledTheme = settingsViewModel.amoledTheme.observeAsState(initial = false)
     val materialYouState = settingsViewModel.materialYou.observeAsState(initial = false)
 
