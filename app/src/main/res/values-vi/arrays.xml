@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="currency_names">
+        <item>Đô la Mỹ ($)</item>
+        <item>Đô la Canada (CA$)</item>
+        <item>Euro (€)</item>
+        <item>Dirham Các Tiểu vương quốc Ả Rập Thống nhất (AED)</item>
+        <item>Afghani Afghanistan (Af)</item>
+        <item>Lek Albania (ALL)</item>
+        <item>Dram Armenia (AMD)</item>
+        <item>Peso Argentina (AR$)</item>
+        <item>Đô la Úc (AU$)</item>
+        <item>Manat Azerbaijan (man.)</item>
+        <item>Mark chuyển đổi Bosnia và Herzegovina (KM)</item>
+        <item>Taka Bangladesh (Tk)</item>
+        <item>Lev Bulgaria (BGN)</item>
+        <item>Dinar Bahrain (BD)</item>
+        <item>Franc Burundi (FBu)</item>
+        <item>Đô la Brunei (BN$)</item>
+        <item>Boliviano Bolivia (Bs)</item>
+        <item>Real Brazil (R$)</item>
+        <item>Pula Botswana (BWP)</item>
+        <item>Rúp Belarus (Br)</item>
+        <item>Đô la Belize (BZ$)</item>
+        <item>Franc Congo (CDF)</item>
+        <item>Franc Thụy Sĩ (CHF)</item>
+        <item>Peso Chile (CL$)</item>
+        <item>Nhân dân tệ Trung Quốc (CN¥)</item>
+        <item>Peso Colombia (CO$)</item>
+        <item>Colón Costa Rica (₡)</item>
+        <item>Escudo Cabo Verde (CV$)</item>
+        <item>Koruna Séc (Kč)</item>
+        <item>Franc Djibouti (Fdj)</item>
+        <item>Krone Đan Mạch (Dkr)</item>
+        <item>Peso Cộng hòa Dominica (RD$)</item>
+        <item>Dinar Algeria (DA)</item>
+        <item>Kroon Estonia (Ekr)</item>
+        <item>Bảng Ai Cập (EGP)</item>
+        <item>Nakfa Eritrea (Nfk)</item>
+        <item>Birr Ethiopia (Br)</item>
+        <item>Bảng Anh (£)</item>
+        <item>Lari Georgia (GEL)</item>
+        <item>Cedi Ghana (GH₵)</item>
+        <item>Franc Guinea (FG)</item>
+        <item>Quetzal Guatemala (GTQ)</item>
+        <item>Đô la Hồng Kông (HK$)</item>
+        <item>Lempira Honduras (HNL)</item>
+        <item>Kuna Croatia (kn)</item>
+        <item>Forint Hungary (Ft)</item>
+        <item>Rupiah Indonesia (Rp)</item>
+        <item>Shekel mới Israel (₪)</item>
+        <item>Rupee Ấn Độ (₹)</item>
+        <item>Dinar Iraq (IQD)</item>
+        <item>Rial Iran (IRR)</item>
+        <item>Króna Iceland (Ikr)</item>
+        <item>Đô la Jamaica (J$)</item>
+        <item>Dinar Jordan (JD)</item>
+        <item>Yên Nhật (¥)</item>
+        <item>Shilling Kenya (Ksh)</item>
+        <item>Riel Campuchia (KHR)</item>
+        <item>Franc Comoros (CF)</item>
+        <item>Won Hàn Quốc (₩)</item>
+        <item>Dinar Kuwait (KD)</item>
+        <item>Tenge Kazakhstan (KZT)</item>
+        <item>Bảng Liban (L.L.)</item>
+        <item>Rupee Sri Lanka (SLRs)</item>
+        <item>Litas Litva (Lt)</item>
+        <item>Lats Latvia (Ls)</item>
+        <item>Dinar Libya (LD)</item>
+        <item>Dirham Maroc (MAD)</item>
+        <item>Leu Moldova (MDL)</item>
+        <item>Ariary Madagascar (MGA)</item>
+        <item>Denar Bắc Macedonia (MKD)</item>
+        <item>Kyat Myanmar (MMK)</item>
+        <item>Pataca Ma Cao (MOP$)</item>
+        <item>Rupee Mauritius (MURs)</item>
+        <item>Peso Mexico (MX$)</item>
+        <item>Ringgit Malaysia (RM)</item>
+        <item>Metical Mozambique (MTn)</item>
+        <item>Đô la Namibia (N$)</item>
+        <item>Naira Nigeria (₦)</item>
+        <item>Córdoba Nicaragua (C$)</item>
+        <item>Krone Na Uy (NOK)</item>
+        <item>Rupee Nepal (NPRs)</item>
+        <item>Đô la New Zealand (NZ$)</item>
+        <item>Rial Oman (OMR)</item>
+        <item>Balboa Panama (B/.)</item>
+        <item>Sol Peru (S/.)</item>
+        <item>Peso Philippines (₱)</item>
+        <item>Rupee Pakistan (PKRs)</item>
+        <item>Zloty Ba Lan (zł)</item>
+        <item>Guarani Paraguay (₲)</item>
+        <item>Rial Qatar (QR)</item>
+        <item>Leu Romania (RON)</item>
+        <item>Dinar Serbia (din.)</item>
+        <item>Rúp Nga (RUB)</item>
+        <item>Franc Rwanda (RWF)</item>
+        <item>Riyal Ả Rập Xê Út (SR)</item>
+        <item>Bảng Sudan (SDG)</item>
+        <item>Krona Thụy Điển (Skr)</item>
+        <item>Đô la Singapore (S$)</item>
+        <item>Shilling Somalia (Ssh)</item>
+        <item>Bảng Syria (SY£)</item>
+        <item>Baht Thái Lan (฿)</item>
+        <item>Dinar Tunisia (DT)</item>
+        <item>Paʻanga Tonga (T$)</item>
+        <item>Lira Thổ Nhĩ Kỳ (TL)</item>
+        <item>Đô la Trinidad và Tobago (TT$)</item>
+        <item>Đô la Đài Loan mới (NT$)</item>
+        <item>Shilling Tanzania (TSh)</item>
+        <item>Hryvnia Ukraina (₴)</item>
+        <item>Shilling Uganda (USh)</item>
+        <item>Peso Uruguay ($U)</item>
+        <item>Som Uzbekistan (UZS)</item>
+        <item>Bolívar Venezuela (Bs.F.)</item>
+        <item>Đồng Việt Nam (₫)</item>
+        <item>Franc CFA Trung Phi (FCFA)</item>
+        <item>Đô la Đông Caribe (EC$)</item>
+        <item>Franc CFA Tây Phi (CFA)</item>
+        <item>Rial Yemen (YR)</item>
+        <item>Rand Nam Phi (R)</item>
+        <item>Kwacha Zambia (ZK)</item>
+        <item>Đô la Zimbabwe (ZWL$)</item>
+    </string-array>
+</resources>
