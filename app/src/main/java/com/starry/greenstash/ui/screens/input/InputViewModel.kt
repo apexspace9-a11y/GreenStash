@@ -1,28 +1,3 @@
-/**
- * MIT License
- *
- * Copyright (c) [2022 - Present] Stɑrry Shivɑm
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
-
 package com.starry.greenstash.ui.screens.input
 
 import android.content.Context
@@ -52,16 +27,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import javax.inject.Inject
 
-data class IconItem(
-    var id: String = "",
-    var name: String = "",
-    var image: ImageVector? = null,
-)
-
+data class IconItem(var id: String = "", var name: String = "", var image: ImageVector? = null)
 data class IconsState(
     val searchText: String = "",
     val icons: List<List<IconItem>> = emptyList(),
@@ -69,7 +37,6 @@ data class IconsState(
     val selectedIcon: IconItem? = null,
     val isLoading: Boolean = true
 )
-
 data class InputScreenState(
     val goalImageUri: Uri? = null,
     val goalTitleText: String = "",
@@ -80,51 +47,44 @@ data class InputScreenState(
     val reminder: Boolean = false
 )
 
-
 @HiltViewModel
 class InputViewModel @Inject constructor(
     private val goalDao: GoalDao,
     private val reminderManager: ReminderManager,
     private val preferenceUtil: PreferenceUtil
 ) : ViewModel() {
-
     var state by mutableStateOf(InputScreenState())
-
-    // Icons state
     private val _iconState = mutableStateOf(IconsState())
     val iconState: State<IconsState> = _iconState
-
     private var iconSearchJob: Job? = null
-
     private val _showOnboardingTapTargets: MutableState<Boolean> = mutableStateOf(
-        value = preferenceUtil.getBoolean(
-            PreferenceUtil.INPUT_SCREEN_ONBOARDING_BOOL,
-            true
-        )
+        preferenceUtil.getBoolean(PreferenceUtil.INPUT_SCREEN_ONBOARDING_BOOL, true)
     )
     val showOnboardingTapTargets: State<Boolean> = _showOnboardingTapTargets
 
-    fun addSavingGoal(context: Context) {
+    fun addSavingGoal(context: Context, onComplete: () -> Any?, onFailure: () -> Any?) {
         viewModelScope.launch(Dispatchers.IO) {
-            val goal = Goal(
-                title = state.goalTitleText,
-                targetAmount = NumberUtils.roundDecimal(state.targetAmount.toDouble()),
-                deadline = state.deadline,
-                goalImage = if (state.goalImageUri != null) ImageUtils.uriToBitmap(
-                    uri = state.goalImageUri!!, context = context, maxSize = 1024
-                ) else null,
-                additionalNotes = state.additionalNotes,
-                priority = GoalPriority.entries.find { it.name == state.priority }!!,
-                reminder = state.reminder,
-                goalIconId = iconState.value.selectedIcon?.id
+            runCatching {
+                val amount = parseAmount(state.targetAmount) ?: error("Invalid amount")
+                val image = state.goalImageUri?.let { ImageUtils.uriToBitmap(it, context, 1024) }
+                val priority = GoalPriority.entries.firstOrNull { it.name == state.priority }
+                    ?: GoalPriority.Normal
+                val goal = Goal(
+                    title = state.goalTitleText.trim(),
+                    targetAmount = amount,
+                    deadline = state.deadline.coerceAtLeast(0L),
+                    goalImage = image,
+                    additionalNotes = state.additionalNotes,
+                    priority = priority,
+                    reminder = state.reminder,
+                    goalIconId = iconState.value.selectedIcon?.id
+                )
+                val goalId = goalDao.insertGoal(goal)
+                if (goal.reminder) reminderManager.scheduleReminder(goalId)
+            }.fold(
+                onSuccess = { withContext(Dispatchers.Main) { onComplete() } },
+                onFailure = { withContext(Dispatchers.Main) { onFailure() } }
             )
-
-            // Add goal into database.
-            val goalId = goalDao.insertGoal(goal)
-            // schedule reminder if it's enabled.
-            if (goal.reminder) {
-                reminderManager.scheduleReminder(goalId)
-            }
         }
     }
 
@@ -133,8 +93,12 @@ class InputViewModel @Inject constructor(
         onEditDataSet: (goalImage: Bitmap?, goalIconId: String?) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val goal = goalDao.getGoalById(goalId)!!
+            val goal = goalDao.getGoalById(goalId)
             withContext(Dispatchers.Main) {
+                if (goal == null) {
+                    onEditDataSet(null, null)
+                    return@withContext
+                }
                 state = state.copy(
                     goalTitleText = goal.title,
                     targetAmount = goal.targetAmount.toString(),
@@ -148,90 +112,75 @@ class InputViewModel @Inject constructor(
         }
     }
 
-    fun editSavingGoal(goalId: Long, context: Context) {
+    fun editSavingGoal(
+        goalId: Long,
+        context: Context,
+        onComplete: () -> Any?,
+        onFailure: () -> Any?
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val goal = goalDao.getGoalById(goalId)!!
-            val newGoal = Goal(
-                title = state.goalTitleText,
-                targetAmount = NumberUtils.roundDecimal(state.targetAmount.toDouble()),
-                deadline = state.deadline,
-                goalImage = if (state.goalImageUri != null) ImageUtils.uriToBitmap(
-                    uri = state.goalImageUri!!, context = context, maxSize = 1024
-                ) else goal.goalImage,
-                additionalNotes = state.additionalNotes,
-                priority = GoalPriority.entries.find { it.name == state.priority }!!,
-                reminder = state.reminder,
-                goalIconId = iconState.value.selectedIcon?.id ?: goal.goalIconId
+            runCatching {
+                val oldGoal = goalDao.getGoalById(goalId) ?: error("Goal not found")
+                val amount = parseAmount(state.targetAmount) ?: error("Invalid amount")
+                val image = state.goalImageUri?.let { ImageUtils.uriToBitmap(it, context, 1024) }
+                    ?: oldGoal.goalImage
+                val priority = GoalPriority.entries.firstOrNull { it.name == state.priority }
+                    ?: GoalPriority.Normal
+                val updated = Goal(
+                    title = state.goalTitleText.trim(),
+                    targetAmount = amount,
+                    deadline = state.deadline.coerceAtLeast(0L),
+                    goalImage = image,
+                    additionalNotes = state.additionalNotes,
+                    priority = priority,
+                    reminder = state.reminder,
+                    goalIconId = iconState.value.selectedIcon?.id ?: oldGoal.goalIconId
+                ).apply { this.goalId = oldGoal.goalId }
+                goalDao.updateGoal(updated)
+                if (updated.reminder) {
+                    if (!reminderManager.isReminderSet(goalId)) reminderManager.scheduleReminder(goalId)
+                } else {
+                    reminderManager.stopReminder(goalId)
+                }
+            }.fold(
+                onSuccess = { withContext(Dispatchers.Main) { onComplete() } },
+                onFailure = { withContext(Dispatchers.Main) { onFailure() } }
             )
-            // copy id of already saved goal to update it.
-            newGoal.goalId = goal.goalId
-            goalDao.updateGoal(newGoal)
-
-            // Handle possible changes made in reminders.
-            if (newGoal.reminder) {
-                if (!reminderManager.isReminderSet(goalId))
-                    reminderManager.scheduleReminder(goalId)
-            } else {
-                reminderManager.stopReminder(goalId)
-            }
         }
     }
-
-    // State update functions ==============
 
     fun updatePriority(priority: String) {
-        state = state.copy(priority = priority)
+        state = state.copy(
+            priority = GoalPriority.entries.firstOrNull { it.name == priority }?.name
+                ?: GoalPriority.Normal.name
+        )
     }
-
-    fun updateReminder(reminder: Boolean) {
-        state = state.copy(reminder = reminder)
-    }
-
-    fun updateTitle(title: String) {
-        state = state.copy(goalTitleText = title)
-    }
-
-    fun updateTargetAmount(amount: String) {
-        state = state.copy(targetAmount = amount)
-    }
-
-    fun removeDeadLine() {
-        state = state.copy(deadline = 0L)
-    }
-
-    fun updateAdditionalNotes(notes: String) {
-        state = state.copy(additionalNotes = notes)
-    }
+    fun updateReminder(reminder: Boolean) { state = state.copy(reminder = reminder) }
+    fun updateTitle(title: String) { state = state.copy(goalTitleText = title) }
+    fun updateTargetAmount(amount: String) { state = state.copy(targetAmount = amount) }
+    fun removeDeadLine() { state = state.copy(deadline = 0L) }
+    fun updateAdditionalNotes(notes: String) { state = state.copy(additionalNotes = notes) }
 
     fun getDateStyleFormat(): String {
-        preferenceUtil.getInt(
-            PreferenceUtil.DATE_STYLE_INT, DateStyle.DD_MM_YYYY.ordinal
-        ).let {
-            return dateStyleToDisplayFormat(DateStyle.entries[it])
-        }
+        val index = preferenceUtil.getInt(PreferenceUtil.DATE_STYLE_INT, DateStyle.DD_MM_YYYY.ordinal)
+        return dateStyleToDisplayFormat(DateStyle.entries.getOrElse(index) { DateStyle.DD_MM_YYYY })
     }
-
-    // Icon picker ==============
 
     fun updateIconSearch(context: Context, search: String) {
         _iconState.value = _iconState.value.copy(searchText = search)
         iconSearchJob?.cancel()
         iconSearchJob = viewModelScope.launch(Dispatchers.IO) {
-            // Add delay to avoid frequent search.
             delay(400)
-
             withContext(Dispatchers.Main) {
                 _iconState.value = _iconState.value.copy(isLoading = true)
             }
-
             val icons = getNamesIcons(context)
                 .filter { it.contains(search, ignoreCase = true) }
                 .take(50)
-                .map { parseIconItem(it) }
-
-            val chunks = icons.chunked(3)
+                .mapNotNull(::parseIconItem)
+                .chunked(3)
             withContext(Dispatchers.Main) {
-                _iconState.value = _iconState.value.copy(icons = chunks, isLoading = false)
+                _iconState.value = _iconState.value.copy(icons = icons, isLoading = false)
             }
         }
     }
@@ -239,43 +188,30 @@ class InputViewModel @Inject constructor(
     fun updateCurrentIcon(icon: IconItem) {
         _iconState.value = _iconState.value.copy(currentIcon = icon)
     }
-
     fun updateSelectedIcon(icon: IconItem) {
         _iconState.value = _iconState.value.copy(selectedIcon = icon)
     }
 
-    private fun parseIconItem(line: String): IconItem {
-        val split = line.split(",")
-        val id = split[0]
-        val name = split[1]
-        val image = ImageUtils.createIconVector(id)
-
-        return IconItem(id, name, image)
+    private fun parseIconItem(line: String): IconItem? {
+        val split = line.split(",", limit = 2)
+        if (split.size != 2 || split[0].isBlank()) return null
+        return IconItem(split[0], split[1], ImageUtils.createIconVector(split[0]))
     }
-
-    private fun getNamesIcons(context: Context): List<String> {
-        val inputStream = context.resources.openRawResource(R.raw.icons_names)
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        val lines = reader.readLines()
-        reader.close()
-        return lines
-    }
-
-    // Onboarding ==============
+    private fun getNamesIcons(context: Context): List<String> =
+        context.resources.openRawResource(R.raw.icons_names).bufferedReader().use { it.readLines() }
+    private fun parseAmount(value: String): Double? = value.toDoubleOrNull()
+        ?.takeIf { it.isFinite() && it > 0.0 }
+        ?.let(NumberUtils::roundDecimal)
+        ?.takeIf { it > 0.0 }
 
     fun onboardingTapTargetsShown() {
         preferenceUtil.putBoolean(PreferenceUtil.INPUT_SCREEN_ONBOARDING_BOOL, false)
         _showOnboardingTapTargets.value = false
     }
-
-    fun shouldShowRemoveDeadlineTip(): Boolean {
-        return state.deadline != 0L && preferenceUtil.getBoolean(
-            PreferenceUtil.INPUT_REMOVE_DEADLINE_TIP_BOOL, true
-        )
-    }
-
+    fun shouldShowRemoveDeadlineTip(): Boolean = state.deadline != 0L && preferenceUtil.getBoolean(
+        PreferenceUtil.INPUT_REMOVE_DEADLINE_TIP_BOOL, true
+    )
     fun removeDeadlineTipShown() {
         preferenceUtil.putBoolean(PreferenceUtil.INPUT_REMOVE_DEADLINE_TIP_BOOL, false)
     }
-
 }

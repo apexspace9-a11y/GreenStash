@@ -20,10 +20,7 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-data class DWScreenState(
-    val amount: String = "",
-    val notes: String = "",
-)
+data class DWScreenState(val amount: String = "", val notes: String = "")
 
 @HiltViewModel
 class DWViewModel @Inject constructor(
@@ -31,48 +28,42 @@ class DWViewModel @Inject constructor(
     private val transactionDao: TransactionDao,
     private val preferenceUtil: PreferenceUtil
 ) : ViewModel() {
-
     var state by mutableStateOf(DWScreenState())
 
     fun getDateStyle(): DateStyle {
-        return preferenceUtil.getInt(PreferenceUtil.DATE_STYLE_INT, DateStyle.DD_MM_YYYY.ordinal)
-            .let { DateStyle.entries[it] }
+        val index = preferenceUtil.getInt(PreferenceUtil.DATE_STYLE_INT, DateStyle.DD_MM_YYYY.ordinal)
+        return DateStyle.entries.getOrElse(index) { DateStyle.DD_MM_YYYY }
     }
 
-    fun convertTransactionType(type: String): TransactionType {
-        return when (type) {
-            TransactionType.Deposit.name -> TransactionType.Deposit
-            TransactionType.Withdraw.name -> TransactionType.Withdraw
-            else -> throw IllegalArgumentException("Invalid transaction type")
-        }
+    fun convertTransactionType(type: String): TransactionType = when (type) {
+        TransactionType.Deposit.name -> TransactionType.Deposit
+        TransactionType.Withdraw.name -> TransactionType.Withdraw
+        else -> TransactionType.Invalid
     }
 
     fun deposit(
         goalId: Long,
         dateTime: LocalDateTime,
-        onGoalAchieved: () -> Unit,
-        onComplete: () -> Unit
+        onGoalAchieved: () -> Any?,
+        onComplete: () -> Any?,
+        onFailure: () -> Any?
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val goal = getGoalById(goalId)!!
-            addTransaction(
-                goalId = goal.goalId,
-                amount = amountToDouble(state.amount),
-                notes = state.notes,
-                dateTime = dateTime,
-                transactionType = TransactionType.Deposit
-            )
-            /**
-             * check weather goal is achieved or not after inserting the
-             * amount in goal database and call the goal achieved function
-             * to show a congratulations message to the user.
-             */
-            val goalItem = goalDao.getGoalWithTransactionById(goal.goalId)!!
-            val remainingAmount = (goal.targetAmount - goalItem.getCurrentlySavedAmount())
-            if (remainingAmount <= 0f) {
-                withContext(Dispatchers.Main) { onGoalAchieved() }
-            } else {
-                withContext(Dispatchers.Main) { onComplete() }
+            val goal = goalDao.getGoalById(goalId)
+            val amount = amountToDouble(state.amount)
+            if (goal == null || amount == null) {
+                withContext(Dispatchers.Main) { onFailure() }
+                return@launch
+            }
+            addTransaction(goal.goalId, amount, state.notes, dateTime, TransactionType.Deposit)
+            val goalItem = goalDao.getGoalWithTransactionById(goal.goalId)
+            if (goalItem == null) {
+                withContext(Dispatchers.Main) { onFailure() }
+                return@launch
+            }
+            val remaining = goal.targetAmount - goalItem.getCurrentlySavedAmount()
+            withContext(Dispatchers.Main) {
+                if (remaining <= 0.0) onGoalAchieved() else onComplete()
             }
         }
     }
@@ -80,34 +71,35 @@ class DWViewModel @Inject constructor(
     fun withdraw(
         goalId: Long,
         dateTime: LocalDateTime,
-        onWithDrawOverflow: () -> Unit,
-        onComplete: () -> Unit
+        onWithDrawOverflow: () -> Any?,
+        onComplete: () -> Any?,
+        onFailure: () -> Any?
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val goal = getGoalById(goalId)!!
-            val goalItem = goalDao.getGoalWithTransactionById(goal.goalId)!!
+            val goal = goalDao.getGoalById(goalId)
             val amount = amountToDouble(state.amount)
-
+            if (goal == null || amount == null) {
+                withContext(Dispatchers.Main) { onFailure() }
+                return@launch
+            }
+            val goalItem = goalDao.getGoalWithTransactionById(goal.goalId)
+            if (goalItem == null) {
+                withContext(Dispatchers.Main) { onFailure() }
+                return@launch
+            }
             if (amount > goalItem.getCurrentlySavedAmount()) {
                 withContext(Dispatchers.Main) { onWithDrawOverflow() }
                 return@launch
             }
-
-            addTransaction(
-                goalId = goal.goalId,
-                amount = amount,
-                notes = state.notes,
-                dateTime = dateTime,
-                transactionType = TransactionType.Withdraw
-            )
-
+            addTransaction(goal.goalId, amount, state.notes, dateTime, TransactionType.Withdraw)
             withContext(Dispatchers.Main) { onComplete() }
         }
     }
 
-    private fun amountToDouble(amount: String) = NumberUtils.roundDecimal(amount.toDouble())
-
-    private suspend fun getGoalById(goalId: Long) = goalDao.getGoalById(goalId)
+    private fun amountToDouble(amount: String): Double? = amount.toDoubleOrNull()
+        ?.takeIf { it.isFinite() && it > 0.0 }
+        ?.let(NumberUtils::roundDecimal)
+        ?.takeIf { it > 0.0 }
 
     private suspend fun addTransaction(
         goalId: Long,
@@ -116,15 +108,14 @@ class DWViewModel @Inject constructor(
         dateTime: LocalDateTime,
         transactionType: TransactionType
     ) {
-        val timeStamp = Utils.getEpochTime(dateTime)
-
-        val transaction = Transaction(
-            ownerGoalId = goalId,
-            type = transactionType,
-            timeStamp = timeStamp,
-            amount = amount,
-            notes = notes
+        transactionDao.insertTransaction(
+            Transaction(
+                ownerGoalId = goalId,
+                type = transactionType,
+                timeStamp = Utils.getEpochTime(dateTime),
+                amount = amount,
+                notes = notes
+            )
         )
-        transactionDao.insertTransaction(transaction)
     }
 }
