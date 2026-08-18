@@ -44,9 +44,9 @@ class DWViewModel @Inject constructor(
     fun deposit(
         goalId: Long,
         dateTime: LocalDateTime,
-        onGoalAchieved: () -> Unit,
-        onComplete: () -> Unit,
-        onFailure: () -> Unit
+        onGoalAchieved: () -> Any?,
+        onComplete: () -> Any?,
+        onFailure: () -> Any?
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val goal = goalDao.getGoalById(goalId)
@@ -71,9 +71,9 @@ class DWViewModel @Inject constructor(
     fun withdraw(
         goalId: Long,
         dateTime: LocalDateTime,
-        onWithDrawOverflow: () -> Unit,
-        onComplete: () -> Unit,
-        onFailure: () -> Unit
+        onWithDrawOverflow: () -> Any?,
+        onComplete: () -> Any?,
+        onFailure: () -> Any?
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val goal = goalDao.getGoalById(goalId)
