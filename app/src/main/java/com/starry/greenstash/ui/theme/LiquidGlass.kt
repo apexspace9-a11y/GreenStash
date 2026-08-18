@@ -43,49 +43,47 @@ fun MocQuyBackground(content: @Composable BoxScope.() -> Unit) {
     val violetGlow = if (dark) Color(0xFF9C6CFF).copy(alpha = 0.16f) else Color(0xFFB48CFF).copy(alpha = 0.16f)
     val goldGlow = Color(0xFFF4C95D).copy(alpha = if (dark) 0.10f else 0.12f)
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .drawWithCache {
-                    val baseGradient = Brush.linearGradient(
-                        colors = listOf(base, mid, end),
-                        start = Offset.Zero,
-                        end = Offset(size.width, size.height)
-                    )
-                    val glow1 = Brush.radialGradient(
-                        colors = listOf(greenGlow, Color.Transparent),
-                        center = Offset(size.width * 0.08f, size.height * 0.10f),
-                        radius = size.maxDimension * 0.54f
-                    )
-                    val glow2 = Brush.radialGradient(
-                        colors = listOf(cyanGlow, Color.Transparent),
-                        center = Offset(size.width * 0.96f, size.height * 0.30f),
-                        radius = size.maxDimension * 0.56f
-                    )
-                    val glow3 = Brush.radialGradient(
-                        colors = listOf(violetGlow, Color.Transparent),
-                        center = Offset(size.width * 0.42f, size.height * 0.98f),
-                        radius = size.maxDimension * 0.50f
-                    )
-                    val glow4 = Brush.radialGradient(
-                        colors = listOf(goldGlow, Color.Transparent),
-                        center = Offset(size.width * 0.80f, size.height * 0.86f),
-                        radius = size.maxDimension * 0.34f
-                    )
-                    onDrawBehind {
-                        drawRect(baseGradient)
-                        drawRect(glow1)
-                        drawRect(glow2)
-                        drawRect(glow3)
-                        drawRect(glow4)
-                    }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .drawWithCache {
+                val baseGradient = Brush.linearGradient(
+                    colors = listOf(base, mid, end),
+                    start = Offset.Zero,
+                    end = Offset(size.width, size.height)
+                )
+                val glow1 = Brush.radialGradient(
+                    colors = listOf(greenGlow, Color.Transparent),
+                    center = Offset(size.width * 0.08f, size.height * 0.10f),
+                    radius = size.maxDimension * 0.54f
+                )
+                val glow2 = Brush.radialGradient(
+                    colors = listOf(cyanGlow, Color.Transparent),
+                    center = Offset(size.width * 0.96f, size.height * 0.30f),
+                    radius = size.maxDimension * 0.56f
+                )
+                val glow3 = Brush.radialGradient(
+                    colors = listOf(violetGlow, Color.Transparent),
+                    center = Offset(size.width * 0.42f, size.height * 0.98f),
+                    radius = size.maxDimension * 0.50f
+                )
+                val glow4 = Brush.radialGradient(
+                    colors = listOf(goldGlow, Color.Transparent),
+                    center = Offset(size.width * 0.80f, size.height * 0.86f),
+                    radius = size.maxDimension * 0.34f
+                )
+                onDrawBehind {
+                    drawRect(baseGradient)
+                    drawRect(glow1)
+                    drawRect(glow2)
+                    drawRect(glow3)
+                    drawRect(glow4)
                 }
-                .hazeSource(hazeState)
-        )
-
+            }
+            .hazeSource(hazeState)
+    ) {
         CompositionLocalProvider(LocalMocQuyHazeState provides hazeState) {
-            Box(modifier = Modifier.fillMaxSize(), content = content)
+            content()
         }
     }
 }
@@ -189,7 +187,7 @@ fun Modifier.liquidGlass(
                     Color.Transparent,
                     secondary.copy(alpha = if (dark) 0.07f else 0.08f)
                 ),
-                start = Offset(0f, 0f),
+                start = Offset.Zero,
                 end = Offset(size.width, size.height)
             )
 
