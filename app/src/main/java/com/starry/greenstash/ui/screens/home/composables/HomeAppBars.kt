@@ -35,6 +35,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,7 +52,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.starry.greenstash.R
+import com.starry.greenstash.ui.screens.home.HomeViewModel
 import com.starry.greenstash.ui.screens.home.SearchBarState
 import com.starry.greenstash.ui.theme.greenstashFont
 import com.starry.greenstash.ui.theme.liquidGlass
@@ -62,8 +66,6 @@ fun HomeAppBar(
     searchBarState: SearchBarState,
     searchTextState: String,
     consumeBackPress: MutableState<Boolean>,
-    goalCount: Int,
-    completedGoalCount: Int,
     onMenuClicked: () -> Unit,
     onFilterClicked: () -> Unit,
     onSearchClicked: () -> Unit,
@@ -71,6 +73,12 @@ fun HomeAppBar(
     onSearchCloseClicked: () -> Unit,
     onSearchImeAction: (String) -> Unit,
 ) {
+    val homeViewModel: HomeViewModel = hiltViewModel()
+    val goals by homeViewModel.goalsList.observeAsState(emptyList())
+    val completedGoalCount = remember(goals) {
+        goals.count { it.getCurrentlySavedAmount() >= it.goal.targetAmount }
+    }
+
     Crossfade(
         targetState = searchBarState,
         animationSpec = tween(240),
@@ -79,7 +87,7 @@ fun HomeAppBar(
         when (state) {
             SearchBarState.CLOSED -> {
                 MocQuyDashboardHeader(
-                    goalCount = goalCount,
+                    goalCount = goals.size,
                     completedGoalCount = completedGoalCount,
                     onMenuClicked = onMenuClicked,
                     onFilterClicked = onFilterClicked,
