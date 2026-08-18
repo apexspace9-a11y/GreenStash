@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-
 package com.starry.greenstash.ui.theme
 
 import android.content.Context
@@ -44,7 +43,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.starry.greenstash.ui.screens.settings.SettingsViewModel
 import com.starry.greenstash.ui.screens.settings.ThemeMode
-
 
 private val lightColors = lightColorScheme(
     primary = primaryLight,
@@ -122,7 +120,6 @@ private val darkColors = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
-
 private fun getColorScheme(
     themeState: ThemeMode,
     materialYouState: Boolean,
@@ -150,21 +147,24 @@ private fun getColorScheme(
         }
     }
 
-    return if (amoledTheme && // Check if AMOLED theme is enabled
+    return if (
+        amoledTheme &&
         (themeState == ThemeMode.Dark || themeState == ThemeMode.Auto && darkTheme)
     ) {
-        initialColorScheme.copy(surface = Color.Black, background = Color.Black)
+        initialColorScheme.copy(
+            background = Color.Black,
+            surface = Color.Black,
+            surfaceContainerLowest = Color.Black,
+            surfaceContainerLow = Color(0xFF050505),
+            surfaceContainer = Color(0xFF080808),
+            surfaceContainerHigh = Color(0xFF0B0B0B),
+            surfaceContainerHighest = Color(0xFF101010)
+        )
     } else {
         initialColorScheme
     }
 }
 
-/**
- * Helper composable function to fix the status bar icons on dark theme
- * when using edge-to-edge mode.
- * @param activity: MainActivity to enable edge-to-edge status bar.
- * @param themeState: ThemeMode to check the current theme.
- */
 @Composable
 fun AdjustEdgeToEdge(activity: AppCompatActivity, themeState: ThemeMode) {
     LaunchedEffect(themeState) {
@@ -179,12 +179,6 @@ fun AdjustEdgeToEdge(activity: AppCompatActivity, themeState: ThemeMode) {
     }
 }
 
-/**
- * GreenStashTheme composable function to apply the theme to the app.
- * @param darkTheme: Boolean to check if the theme is dark.
- * @param settingsViewModel: SettingsViewModel to observe the theme settings.
- * @param content: @Composable function to apply the theme to the content.
- */
 @Composable
 fun GreenStashTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -194,9 +188,7 @@ fun GreenStashTheme(
     val context = LocalContext.current
     val themeState = settingsViewModel.theme.observeAsState(initial = ThemeMode.Auto)
     val amoledTheme = settingsViewModel.amoledTheme.observeAsState(initial = false)
-    val materialYouState = settingsViewModel.materialYou.observeAsState(
-        initial = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-    )
+    val materialYouState = settingsViewModel.materialYou.observeAsState(initial = false)
 
     val colorScheme = getColorScheme(
         themeState = themeState.value,
@@ -205,6 +197,7 @@ fun GreenStashTheme(
         darkTheme = darkTheme,
         context = context
     )
+
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
