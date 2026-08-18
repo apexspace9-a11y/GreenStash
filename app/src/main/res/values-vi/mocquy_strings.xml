@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="savings_overview_title">Tổng quan tiết kiệm</string>
+    <string name="savings_overview_saved">Đã tích lũy</string>
+    <string name="savings_overview_target">Tổng mục tiêu</string>
+    <string name="savings_overview_completed">Hoàn thành %1$d/%2$d mục tiêu</string>
+    <string name="savings_overview_progress">Tiến độ chung %d%%</string>
+    <string name="mocquy_repository">Mã nguồn Mộc Quỹ</string>
+</resources>

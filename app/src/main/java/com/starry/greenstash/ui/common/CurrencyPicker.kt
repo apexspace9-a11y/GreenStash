@@ -2,27 +2,7 @@
  * MIT License
  *
  * Copyright (c) [2022 - Present] Stɑrry Shivɑm
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
  */
-
-
 package com.starry.greenstash.ui.common
 
 import androidx.compose.foundation.layout.Column
@@ -43,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
@@ -61,17 +42,12 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.starry.greenstash.R
 import com.starry.greenstash.ui.theme.greenstashFont
+import com.starry.greenstash.ui.theme.liquidGlass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
-/**
- * Data class to hold the currency names and values for the currency picker.
- * @param currencyNames Array of currency names.
- * @param currencyValues Array of currency values.
- */
 @Immutable
 data class CurrencyPickerData(
     val currencyNames: Array<String>,
@@ -80,13 +56,9 @@ data class CurrencyPickerData(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-
         other as CurrencyPickerData
-
-        if (!currencyNames.contentEquals(other.currencyNames)) return false
-        if (!currencyValues.contentEquals(other.currencyValues)) return false
-
-        return true
+        return currencyNames.contentEquals(other.currencyNames) &&
+            currencyValues.contentEquals(other.currencyValues)
     }
 
     override fun hashCode(): Int {
@@ -106,108 +78,123 @@ fun CurrencyPicker(
 ) {
     val currencyNames = currencyPickerData.currencyNames
     val currencyValues = currencyPickerData.currencyValues
+    val safeIndex = currencyValues.indexOf(defaultCurrencyValue)
+        .takeIf { it in currencyNames.indices }
+        ?: currencyValues.indexOf("VND").takeIf { it in currencyNames.indices }
+        ?: 0
+    val defaultCurrencyEntry = currencyNames.getOrElse(safeIndex) { "Đồng Việt Nam (₫)" }
 
-    val defaultCurrencyEntry = currencyNames[currencyValues.indexOf(defaultCurrencyValue)]
     val (selectedCurrencyOption, onCurrencyOptionSelected) = rememberSaveable {
         mutableStateOf(defaultCurrencyEntry)
     }
     val (searchText, onSearchTextChanged) = rememberSaveable { mutableStateOf("") }
-    val filteredCurrencies = currencyNames.filter { it.contains(searchText, ignoreCase = true) }
-
+    val filteredCurrencies = currencyNames.filter {
+        it.contains(searchText, ignoreCase = true)
+    }
     val coroutineScope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
 
+    fun selectedCode(): String {
+        val selectedIndex = currencyNames.indexOf(selectedCurrencyOption)
+        return currencyValues.getOrElse(selectedIndex) { "VND" }
+    }
+
     if (showBottomSheet.value) {
         ModalBottomSheet(
+            containerColor = Color.Transparent,
             sheetState = sheetState,
             onDismissRequest = {
                 coroutineScope.launch {
                     sheetState.hide()
-                    delay(300)
+                    delay(220)
                     withContext(Dispatchers.Main) {
                         showBottomSheet.value = false
-                        val choice = currencyValues[currencyNames.indexOf(selectedCurrencyOption)]
-                        onCurrencySelected(choice)
+                        onCurrencySelected(selectedCode())
                     }
                 }
-            },
-            content = {
-                Column {
-                    OutlinedTextField(
-                        value = searchText,
-                        onValueChange = onSearchTextChanged,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        placeholder = { Text(stringResource(R.string.search_currency)) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = stringResource(R.string.search)
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                    .liquidGlass(radius = 30.dp, blurAmount = 32.dp)
+                    .padding(12.dp)
+            ) {
+                OutlinedTextField(
+                    value = searchText,
+                    onValueChange = onSearchTextChanged,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp),
+                    placeholder = { Text(stringResource(R.string.search_currency)) },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = stringResource(R.string.search)
+                        )
+                    },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent
+                    ),
+                    shape = RoundedCornerShape(18.dp)
+                )
+
+                Column(
+                    modifier = Modifier
+                        .height(360.dp)
+                        .selectableGroup()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    filteredCurrencies.forEach { text ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp)
+                                .selectable(
+                                    selected = text == selectedCurrencyOption,
+                                    onClick = { onCurrencyOptionSelected(text) },
+                                    role = Role.RadioButton
+                                ),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = text == selectedCurrencyOption,
+                                onClick = null,
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = MaterialTheme.colorScheme.primary,
+                                    unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             )
-                        }, shape = RoundedCornerShape(12.dp)
-                    )
-                    Column(
-                        modifier = Modifier
-                            .selectableGroup()
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        filteredCurrencies.forEach { text ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(46.dp)
-                                    .selectable(
-                                        selected = (text == selectedCurrencyOption),
-                                        onClick = {
-                                            onCurrencyOptionSelected(text)
-                                        },
-                                        role = Role.RadioButton
-                                    ),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Row(modifier = Modifier.padding(horizontal = 18.dp)) {
-                                    RadioButton(
-                                        selected = (text == selectedCurrencyOption),
-                                        onClick = null,
-                                        colors = RadioButtonDefaults.colors(
-                                            selectedColor = MaterialTheme.colorScheme.primary,
-                                            unselectedColor = MaterialTheme.colorScheme.inversePrimary,
-                                            disabledSelectedColor = Color.Black,
-                                            disabledUnselectedColor = Color.Black
-                                        )
-                                    )
-                                    Text(
-                                        text = text,
-                                        modifier = Modifier.padding(start = 16.dp),
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        fontFamily = greenstashFont
-                                    )
-                                }
-                            }
+                            Text(
+                                text = text,
+                                modifier = Modifier.padding(start = 10.dp),
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontFamily = greenstashFont
+                            )
                         }
                     }
                 }
+
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(top = 10.dp),
                     onClick = {
                         coroutineScope.launch {
                             sheetState.hide()
-                            delay(300)
+                            delay(220)
                             withContext(Dispatchers.Main) {
                                 showBottomSheet.value = false
-                                val choice =
-                                    currencyValues[currencyNames.indexOf(selectedCurrencyOption)]
-                                onCurrencySelected(choice)
+                                onCurrencySelected(selectedCode())
                             }
                         }
                     }
                 ) {
-                    Text(stringResource(id = R.string.confirm), fontFamily = greenstashFont)
+                    Text(stringResource(R.string.confirm), fontFamily = greenstashFont)
                 }
             }
-        )
+        }
     }
 }
