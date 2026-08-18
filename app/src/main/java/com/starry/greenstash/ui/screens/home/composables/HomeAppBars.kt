@@ -2,53 +2,68 @@ package com.starry.greenstash.ui.screens.home.composables
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.starry.greenstash.R
 import com.starry.greenstash.ui.screens.home.SearchBarState
 import com.starry.greenstash.ui.theme.greenstashFont
 import com.starry.greenstash.ui.theme.liquidGlass
 import com.starry.greenstash.utils.weakHapticFeedback
+import java.time.LocalTime
 
 @Composable
 fun HomeAppBar(
     searchBarState: SearchBarState,
     searchTextState: String,
     consumeBackPress: MutableState<Boolean>,
+    goalCount: Int,
+    completedGoalCount: Int,
     onMenuClicked: () -> Unit,
     onFilterClicked: () -> Unit,
     onSearchClicked: () -> Unit,
@@ -56,92 +71,231 @@ fun HomeAppBar(
     onSearchCloseClicked: () -> Unit,
     onSearchImeAction: (String) -> Unit,
 ) {
-    Crossfade(targetState = searchBarState, animationSpec = tween(280), label = "searchbar cross-fade") {
-        when (it) {
+    Crossfade(
+        targetState = searchBarState,
+        animationSpec = tween(240),
+        label = "mocquy-header-mode"
+    ) { state ->
+        when (state) {
             SearchBarState.CLOSED -> {
-                DefaultAppBar(onMenuClicked, onFilterClicked, onSearchClicked)
+                MocQuyDashboardHeader(
+                    goalCount = goalCount,
+                    completedGoalCount = completedGoalCount,
+                    onMenuClicked = onMenuClicked,
+                    onFilterClicked = onFilterClicked,
+                    onSearchClicked = onSearchClicked
+                )
                 consumeBackPress.value = false
             }
+
             SearchBarState.OPENED -> {
-                SearchAppBar(searchTextState, onSearchTextChange, onSearchCloseClicked, onSearchImeAction)
+                MocQuySearchHeader(
+                    text = searchTextState,
+                    onTextChange = onSearchTextChange,
+                    onCloseClicked = onSearchCloseClicked,
+                    onSearchClicked = onSearchImeAction
+                )
                 consumeBackPress.value = true
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DefaultAppBar(
+private fun MocQuyDashboardHeader(
+    goalCount: Int,
+    completedGoalCount: Int,
     onMenuClicked: () -> Unit,
     onFilterClicked: () -> Unit,
     onSearchClicked: () -> Unit,
 ) {
     val view = LocalView.current
-    TopAppBar(
-        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp).liquidGlass(28.dp),
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent,
-            scrolledContainerColor = Color.Transparent
-        ),
-        title = {
-            Text(
-                stringResource(R.string.home_screen_header),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontFamily = greenstashFont
+    val hour = remember { LocalTime.now().hour }
+    val greeting = when (hour) {
+        in 5..10 -> stringResource(R.string.home_header_greeting_morning)
+        in 11..17 -> stringResource(R.string.home_header_greeting_afternoon)
+        else -> stringResource(R.string.home_header_greeting_evening)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 6.dp)
+            .liquidGlass(radius = 32.dp, blurAmount = 32.dp)
+            .padding(horizontal = 12.dp, vertical = 12.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            HeaderActionButton(
+                imageVector = Icons.Filled.Menu,
+                contentDescription = stringResource(R.string.menu_button_desc),
+                onClick = {
+                    view.weakHapticFeedback()
+                    onMenuClicked()
+                }
             )
-        },
-        navigationIcon = {
-            IconButton(onClick = { view.weakHapticFeedback(); onMenuClicked() }) {
-                Icon(Icons.Filled.Menu, stringResource(R.string.menu_button_desc))
+
+            Image(
+                painter = painterResource(R.drawable.ic_launcher_foreground),
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(start = 10.dp)
+                    .size(40.dp)
+            )
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
+            ) {
+                Text(
+                    text = greeting,
+                    fontFamily = greenstashFont,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1
+                )
+                Text(
+                    text = stringResource(R.string.brand_name),
+                    fontFamily = greenstashFont,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
-        },
-        actions = {
-            IconButton(onClick = { view.weakHapticFeedback(); onFilterClicked() }) {
-                Icon(Icons.AutoMirrored.Filled.Sort, stringResource(R.string.filter_button_desc))
-            }
-            IconButton(onClick = { view.weakHapticFeedback(); onSearchClicked() }) {
-                Icon(Icons.Filled.Search, stringResource(R.string.search_button_desc))
-            }
+
+            HeaderActionButton(
+                imageVector = Icons.AutoMirrored.Filled.Sort,
+                contentDescription = stringResource(R.string.filter_button_desc),
+                onClick = {
+                    view.weakHapticFeedback()
+                    onFilterClicked()
+                }
+            )
+            Spacer(Modifier.size(6.dp))
+            HeaderActionButton(
+                imageVector = Icons.Filled.Search,
+                contentDescription = stringResource(R.string.search_button_desc),
+                onClick = {
+                    view.weakHapticFeedback()
+                    onSearchClicked()
+                }
+            )
         }
-    )
+
+        Spacer(Modifier.height(10.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    MaterialTheme.colorScheme.surface.copy(alpha = 0.16f),
+                    RoundedCornerShape(20.dp)
+                )
+                .padding(horizontal = 12.dp, vertical = 9.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = stringResource(R.string.home_screen_header),
+                fontFamily = greenstashFont,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = stringResource(
+                    R.string.home_header_goal_summary,
+                    goalCount,
+                    completedGoalCount
+                ),
+                fontFamily = greenstashFont,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
 }
 
 @Composable
-private fun SearchAppBar(
+private fun HeaderActionButton(
+    imageVector: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier
+            .size(42.dp)
+            .background(
+                MaterialTheme.colorScheme.surface.copy(alpha = 0.22f),
+                CircleShape
+            )
+    ) {
+        Icon(
+            imageVector = imageVector,
+            contentDescription = contentDescription,
+            tint = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
+private fun MocQuySearchHeader(
     text: String,
     onTextChange: (String) -> Unit,
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
-    Surface(
+    val view = LocalView.current
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .windowInsetsPadding(WindowInsets.statusBars)
-            .padding(horizontal = 12.dp, vertical = 6.dp)
-            .focusRequester(focusRequester)
-            .liquidGlass(28.dp),
-        color = Color.Transparent
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .liquidGlass(radius = 30.dp, blurAmount = 34.dp)
+            .padding(horizontal = 8.dp, vertical = 6.dp)
     ) {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 2.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester),
             value = text,
             onValueChange = onTextChange,
             placeholder = {
-                Text(stringResource(R.string.home_search_label), color = MaterialTheme.colorScheme.onSurface, fontFamily = greenstashFont)
+                Text(
+                    stringResource(R.string.home_search_label),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontFamily = greenstashFont
+                )
             },
             singleLine = true,
             leadingIcon = {
-                IconButton(onClick = {}) {
-                    Icon(Icons.Default.Search, null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f))
+                IconButton(
+                    onClick = {
+                        view.weakHapticFeedback()
+                        onCloseClicked()
+                    }
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.navigate_back_desc)
+                    )
                 }
             },
             trailingIcon = {
-                IconButton(onClick = { if (text.isNotEmpty()) onTextChange("") else onCloseClicked() }) {
-                    Icon(Icons.Filled.Close, null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f))
-                }
+                Icon(
+                    Icons.Filled.Search,
+                    contentDescription = stringResource(R.string.search_button_desc),
+                    tint = MaterialTheme.colorScheme.primary
+                )
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(onSearch = { onSearchClicked(text) }),
